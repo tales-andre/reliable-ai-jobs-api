@@ -1,0 +1,13 @@
+[project]
+name = "reliable-ai-jobs-api"
+version = "1.0.0"
+description = "AI generation jobs that retry safely, survive worker crashes and respect a spending cap."
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+markers = ["slow: starts real processes (worker kill test, chaos run)"]
+filterwarnings = ["ignore:Using `httpx` with `starlette.testclient`"]

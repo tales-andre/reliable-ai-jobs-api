@@ -1,0 +1,69 @@
+# docker compose up --build        API on http://localhost:8000, 2 workers, unreliable fake provider
+# docker compose run --rm chaos    chaos run, writes ./report/chaos.html
+# docker compose run --rm tests    test suite
+x-app: &app
+  build: .
+  environment: &env
+    DATABASE_URL: postgresql://jobs:jobs@db:5432/jobs
+    FAKE_PROVIDER_URL: http://fakeprovider:8090
+    PROVIDER: ${PROVIDER:-fake}
+    LLM_MODEL: ${LLM_MODEL:-}
+    OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    BUDGET_CAP_MICROS: ${BUDGET_CAP_MICROS:-1000000}
+    PRICE_IN_MICROS: ${PRICE_IN_MICROS:-10}
+    PRICE_OUT_MICROS: ${PRICE_OUT_MICROS:-10}
+    DRY_RUN: ${DRY_RUN:-0}
+  depends_on:
+    db:
+      condition: service_healthy
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: jobs
+      POSTGRES_PASSWORD: jobs
+      POSTGRES_DB: jobs
+    ports:
+      - "127.0.0.1:54330:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jobs -d jobs"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  fakeprovider:
+    build: .
+    command: ["python", "-m", "fakeprovider", "--host", "0.0.0.0", "--port", "8090", "--chaos", "--seed", "42"]
+
+  api:
+    <<: *app
+    environment:
+      <<: *env
+      HOST: 0.0.0.0
+    ports:
+      - "127.0.0.1:8000:8000"
+
+  worker:
+    <<: *app
+    command: ["python", "-m", "jobsapi.worker"]
+    depends_on:
+      db:
+        condition: service_healthy
+      fakeprovider:
+        condition: service_started
+    deploy:
+      replicas: 2
+
+  chaos:
+    <<: *app
+    profiles: ["tools"]
+    command: ["python", "-m", "chaos.run"]
+    volumes:
+      - ./report:/app/report
+
+  tests:
+    <<: *app
+    profiles: ["tools"]
+    command: ["python", "-m", "pytest"]

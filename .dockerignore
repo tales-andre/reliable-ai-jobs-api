@@ -1,0 +1,7 @@
+.venv
+.git
+.hypothesis
+.pytest_cache
+__pycache__
+report
+docs

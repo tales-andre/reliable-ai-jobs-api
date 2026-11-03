@@ -1,0 +1,43 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Cover</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; width: 1600px; height: 1200px; background: #eef1f5; font-family: 'Segoe UI', system-ui, sans-serif; color: #17202b; position: relative; overflow: hidden; }
+  header { background: #0f2f4a; color: #fff; padding: 50px 80px 46px; }
+  .kicker { font-size: 26px; letter-spacing: 2px; text-transform: uppercase; color: #9cc3e6; font-weight: 600; margin-bottom: 10px; }
+  h1 { margin: 0; font-size: 80px; line-height: 1.05; letter-spacing: -0.5px; }
+  .ba { display: flex; gap: 0; margin: 44px 80px 0; align-items: stretch; }
+  .col { flex: 1; border-radius: 16px; padding: 30px 36px; }
+  .before { background: #fdecec; border: 3px solid #e8a5a5; }
+  .after { background: #e6f4ea; border: 3px solid #93c9a1; }
+  .tag { display: inline-block; font-size: 24px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 16px; border-radius: 8px; color: #fff; margin-bottom: 16px; }
+  .before .tag { background: #c62828; }
+  .after .tag { background: #2e7d32; }
+  .big { font-size: 46px; font-weight: 700; line-height: 1.15; }
+  .before .big { color: #8e1b1b; }
+  .after .big { color: #1d5e2c; }
+  .arrow { width: 90px; display: flex; align-items: center; justify-content: center; font-size: 64px; color: #5a6878; }
+  .shot { margin: 40px 80px 0; background: #fff; border: 2px solid #d3dae2; border-radius: 14px; overflow: hidden; height: 560px; position: relative; }
+  .shot img { position: absolute; left: -175px; top: -40px; width: 1132px; transform: scale(1.36); transform-origin: 175px 40px; }
+  .legend { position: absolute; left: 0; right: 0; bottom: 58px; background: #fff; border-top: 1px solid #d3dae2; display: flex; gap: 30px; padding: 12px 28px; font-size: 24px; color: #334155; }
+  .legend i { display: inline-block; width: 30px; height: 16px; border-radius: 3px; margin-right: 10px; vertical-align: -1px; }
+  .cap { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(15, 47, 74, 0.9); color: #fff; font-size: 27px; padding: 14px 28px; }
+  footer { position: absolute; bottom: 30px; left: 80px; font-size: 26px; color: #4a5767; }
+</style></head>
+<body>
+<header>
+  <div class="kicker">Open-source demo · AI background jobs</div>
+  <h1>No lost jobs. No surprise bills.</h1>
+</header>
+<div class="ba">
+  <div class="col before"><span class="tag">Before</span><div class="big">Random failures,<br>surprise bill</div></div>
+  <div class="arrow">&rarr;</div>
+  <div class="col after"><span class="tag">After</span><div class="big">Safe retries,<br>hard spending cap</div></div>
+</div>
+<div class="shot">
+  <img src="chaos-timeline.png" alt="">
+  <div class="legend"><span><i style="background:#dc2626"></i>timeout</span><span><i style="background:#111827"></i>worker killed</span><span><i style="background:#a8b3c2"></i>job held, then taken back</span><span><i style="background:#14b8a6"></i>stored reply, not paid again</span></div>
+  <div class="cap">Real chaos run: workers killed mid-call, jobs picked up again, nothing paid twice</div>
+</div>
+<footer>github.com/tales-andre/reliable-ai-jobs-api</footer>
+</body></html>

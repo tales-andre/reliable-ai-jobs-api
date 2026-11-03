@@ -8,6 +8,13 @@ Invariants (checked by tests/test_ledger.py):
   * closing the same call twice changes nothing the second time;
   * reserved never goes negative; spent only goes down through reconcile(), and
     never below what the provider confirmed.
+
+What the cap does and does not promise: it is enforced against the reservation,
+which is an estimate made before the call (costs.py). If a real provider reports
+more usage than was reserved, close() records the real cost anyway, so spent can
+end up above the cap by that difference. It is never hidden: the excess is in the
+close row's reason, the budget shows remaining < 0, and every new reservation is
+refused until there is room again.
 """
 from __future__ import annotations
 
@@ -81,6 +88,10 @@ def close(conn: psycopg.Connection, key: str, spent: int | None, reason: str) ->
         if not res:
             return False
         amount = res["amount_micros"] if spent is None else spent
+        if amount > res["amount_micros"]:
+            # The real usage beat the estimate. Record what was really spent; the
+            # budget may now be over the cap, which blocks every new reservation.
+            reason = f"{reason}; {amount - res['amount_micros']} micros above the reservation"
         inserted = conn.execute(
             "INSERT INTO ledger (call_key, job_id, kind, amount_micros, reason) VALUES (%s, %s, 'close', %s, %s) "
             "ON CONFLICT (call_key, kind) DO NOTHING RETURNING call_key",

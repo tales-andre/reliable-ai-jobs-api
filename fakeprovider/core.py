@@ -9,9 +9,10 @@ times that key was seen, so a rerun with the same seed makes the same choices):
   rate_limited  429 with Retry-After, no charge
   server_error  500, no charge
 
-Duplicate replies: when a key that already has a finished reply comes back (the
-client retried after a timeout), the stored reply is returned again with
-"replayed": true and no new charge. Without an Idempotency-Key every call is
+Stored replies (not a fault, a feature real providers may or may not have): when
+a key that already has a finished reply comes back (the client retried after a
+timeout), the stored reply is returned again with "replayed": true and no new
+charge. Without an Idempotency-Key every call is
 new work and is charged; this is what a naive client gets.
 
 A prompt containing "[reject]" always gets 400 (a permanent error to test with).
@@ -44,6 +45,7 @@ class Action:
 class Charge:
     key: str | None
     ref: str
+    job_ref: str
     cost_micros: int
     at: float
 
@@ -90,7 +92,9 @@ class FakeProviderCore:
                                         "cost_micros": tin * self.price_in + n_out * self.price_out},
                 "replayed": False}
 
-    def handle(self, key: str | None, prompt: str, max_tokens: int, ref: str = "") -> Action:
+    def handle(self, key: str | None, prompt: str, max_tokens: int, ref: str = "", job_ref: str = "") -> Action:
+        """ref groups calls by client request (faults are chosen per request); job_ref
+        is only a label for the bill, so a report can tell which job paid."""
         with self._lock:
             self.calls += 1
             if "[reject]" in prompt:
@@ -110,7 +114,7 @@ class FakeProviderCore:
             if fault == "server_error":
                 return Action(500, {"error": "internal error"}, fault=fault)
             body = self._reply(f"{ref or seen_key}#{n}", prompt, max_tokens)
-            self.charges.append(Charge(key, ref, body["usage"]["cost_micros"], time.time()))
+            self.charges.append(Charge(key, ref, job_ref, body["usage"]["cost_micros"], time.time()))
             if key:
                 self.replies[key] = body
             delay = self.fixed_delay_s
@@ -123,11 +127,16 @@ class FakeProviderCore:
     def bill(self) -> dict:
         with self._lock:
             by_ref: dict[str, int] = {}
+            by_job: dict[str, int] = {}
             for c in self.charges:
-                by_ref[c.ref or c.key or "?"] = by_ref.get(c.ref or c.key or "?", 0) + 1
+                r = c.ref or c.key or "?"
+                j = c.key or c.job_ref or r      # with an Idempotency-Key, the key is the job
+                by_ref[r] = by_ref.get(r, 0) + 1
+                by_job[j] = by_job.get(j, 0) + 1
             return {
                 "calls": self.calls,
                 "charges": len(self.charges),
                 "total_micros": sum(c.cost_micros for c in self.charges),
                 "charges_by_ref": by_ref,
+                "charges_by_job": by_job,
             }

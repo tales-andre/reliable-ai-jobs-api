@@ -3,9 +3,11 @@
     python -m chaos.run                  # both modes, writes report/chaos.html and report/chaos.json
     python -m chaos.run --mode safe      # only the safeguarded worker
 
-The same seed gives the same requests, the same repeated POSTs and the same
-provider faults. Worker kills and timings depend on the machine, so the timeline
-differs a little between runs; the checks must pass every time.
+The same seed gives the same requests and the same repeated POSTs. The fake
+provider uses the same fault rates in both modes and picks faults per request: the
+n-th call made for a request gets the same fault in both modes (the naive side makes
+more calls, so it sees more of them). Worker kills and timings depend on the machine,
+so the timeline differs a little between runs; the checks must pass every time.
 It uses its own database (jobs_chaos) and recreates it on every run.
 """
 from __future__ import annotations
@@ -20,6 +22,7 @@ import subprocess
 import sys
 import threading
 import time
+import warnings
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import replace
@@ -28,7 +31,7 @@ from pathlib import Path
 import httpx
 
 from jobsapi.config import Settings
-from jobsapi.costs import estimate_cost_micros, fmt_usd
+from jobsapi.costs import fmt_usd
 from jobsapi.db import connect, ensure_database, reset_schema
 
 from .report import write_report
@@ -117,27 +120,26 @@ def run_mode(mode: str, args, base_settings: Settings, db_url: str) -> dict:
     reqs = build_requests(args.seed, args.jobs)
     posts = sum(r["sends"] for r in reqs)
     statuses: Counter = Counter()
-    if mode == "safe":
-        from fastapi.testclient import TestClient
+    # Same filter as pyproject's pytest settings: a deprecation notice about the test
+    # client's HTTP library, not about this code.
+    warnings.filterwarnings("ignore", message="Using `httpx` with `starlette.testclient`")
+    from fastapi.testclient import TestClient
 
+    if mode == "safe":
         from jobsapi.api import create_app
-        with TestClient(create_app(settings)) as client:
-            def send(r):
-                return client.post("/jobs", json={"prompt": r["prompt"], "max_tokens": r["max_tokens"]},
-                                   headers={"Idempotency-Key": r["key"]}).status_code
-            with ThreadPoolExecutor(8) as ex:
-                for code in ex.map(send, [r for r in reqs for _ in range(r["sends"])]):
-                    statuses[code] += 1
+        app = create_app(settings)
     else:
-        # What an API without idempotency keys does: one job per POST.
-        for r in reqs:
-            for s in range(r["sends"]):
-                est = estimate_cost_micros(r["prompt"], r["max_tokens"], settings.price_in_micros,
-                                           settings.price_out_micros)
-                conn.execute("INSERT INTO jobs (idempotency_key, request_hash, prompt, max_tokens, max_attempts, "
-                             "estimate_micros) VALUES (%s, '', %s, %s, 5, %s)",
-                             (f"{r['key']}#{s}", r["prompt"], r["max_tokens"], est))
-                statuses[201] += 1
+        from .naive_api import create_naive_app
+        app = create_naive_app(settings)
+    # The client is identical in both modes: same requests, same headers, same repeats.
+    # The naive API ignores Idempotency-Key and has no spending check.
+    with TestClient(app) as client:
+        def send(r):
+            return client.post("/jobs", json={"prompt": r["prompt"], "max_tokens": r["max_tokens"]},
+                               headers={"Idempotency-Key": r["key"], "X-Request-Ref": r["key"]}).status_code
+        with ThreadPoolExecutor(8) as ex:
+            for code in ex.map(send, [r for r in reqs for _ in range(r["sends"])]):
+                statuses[code] += 1
     out.say(f"client sent {posts} POSTs for {len(reqs)} requests -> " +
             ", ".join(f"{n}x HTTP {c}" for c, n in sorted(statuses.items())))
 
@@ -232,6 +234,9 @@ def summarize(mode, args, reqs, posts, statuses, jobs, attempts, budget, bill, k
     duplicate_jobs = sum(n - 1 for n in by_request.values())
     lost = [j for j in jobs if j["status"] not in ("succeeded", "failed")]
     dup_charges = sum(max(0, n - 1) for n in bill["charges_by_ref"].values())
+    # Of those, the ones paid again inside a single job (worker retried without a key);
+    # the rest come from one request having become several jobs (API without a key).
+    dup_in_job = sum(max(0, n - 1) for n in bill["charges_by_job"].values())
     over_cap = max(0, bill["total_micros"] - args.cap)
     attempts_by_job: dict = {}
     for a in attempts:
@@ -246,24 +251,26 @@ def summarize(mode, args, reqs, posts, statuses, jobs, attempts, budget, bill, k
     ledger_spent = budget["spent_micros"] if mode == "safe" else None
     under_count = (bill["total_micros"] > ledger_spent) if ledger_spent is not None else None
 
+    # "where": which half of the system is responsible for the check (the naive side
+    # lacks the safeguard in that half).
+    def check(cid, label, value, where, ok):
+        return {"id": cid, "label": label, "value": value, "where": where, "ok": ok}
+
     checks = [
-        {"id": "duplicate_jobs", "label": "Repeated POSTs that created a second job", "value": duplicate_jobs,
-         "ok": duplicate_jobs == 0},
-        {"id": "lost_jobs", "label": "Jobs lost (never finished) after workers were killed", "value": len(lost),
-         "ok": not lost},
-        {"id": "duplicate_charges", "label": "Requests the provider charged more than once", "value": dup_charges,
-         "ok": dup_charges == 0},
-        {"id": "over_cap", "label": "Provider charges above the spending cap", "value": fmt_usd(over_cap),
-         "ok": over_cap == 0},
-        {"id": "retried_permanent", "label": "Retries after an error that cannot succeed", "value": retried_permanent,
-         "ok": retried_permanent == 0},
-        {"id": "unexplained_failures", "label": "Failed jobs without a reason", "value": len(unexplained),
-         "ok": not unexplained},
-        {"id": "ledger_covers_bill", "label": "Our ledger counted at least what the provider charged",
-         "value": "not tracked" if under_count is None else ("no" if under_count else "yes"),
-         "ok": under_count is False},
-        {"id": "worker_crashes", "label": "Workers that crashed on their own", "value": len(crashed),
-         "ok": not crashed},
+        check("duplicate_jobs", "Repeated POSTs that created a second job", duplicate_jobs, "API",
+              duplicate_jobs == 0),
+        check("lost_jobs", "Jobs lost (never finished) after workers were killed", len(lost), "worker", not lost),
+        check("duplicate_charges", "Requests the provider charged more than once", dup_charges, "API + worker",
+              dup_charges == 0),
+        check("over_cap", "Provider charges above the spending cap", fmt_usd(over_cap), "API + worker",
+              over_cap == 0),
+        check("retried_permanent", "Retries after an error that cannot succeed", retried_permanent, "worker",
+              retried_permanent == 0),
+        check("unexplained_failures", "Failed jobs without a reason", len(unexplained), "worker", not unexplained),
+        check("ledger_covers_bill", "Our ledger counted at least what the provider charged",
+              "not tracked" if under_count is None else ("no" if under_count else "yes"), "worker",
+              under_count is False),
+        check("worker_crashes", "Workers that crashed on their own", len(crashed), "worker", not crashed),
     ]
     outcomes = Counter(a["outcome"] or "in flight" for a in attempts)
     stats = {
@@ -272,6 +279,7 @@ def summarize(mode, args, reqs, posts, statuses, jobs, attempts, budget, bill, k
         "failed": Counter(j["error_kind"] or "error" for j in jobs if j["status"] == "failed"),
         "stuck": len(lost), "attempts": len(attempts), "attempt_outcomes": dict(outcomes),
         "workers_killed": len(kills), "provider_calls": bill["calls"], "provider_charges": bill["charges"],
+        "dup_charges_from_duplicate_jobs": dup_charges - dup_in_job, "dup_charges_from_retries": dup_in_job,
         "provider_billed_micros": bill["total_micros"], "cap_micros": args.cap, "ledger_spent_micros": ledger_spent,
     }
     passed = sum(c["ok"] for c in checks)
@@ -317,7 +325,12 @@ def main(argv=None) -> int:
     (outdir / "chaos.json").write_text(json.dumps({"params": params, "results": results}, indent=1, default=str),
                                        encoding="utf-8")
     write_report(outdir / "chaos.html", params, results)
-    print(f"\nreport: {outdir / 'chaos.html'}")
+    report = outdir / "chaos.html"
+    try:   # print the path from the repo root, not the machine's absolute path
+        shown = report.resolve().relative_to(Path.cwd().resolve()).as_posix()
+    except ValueError:
+        shown = str(report)
+    print(f"\nreport: {shown}")
     safe = results.get("safe")
     if safe and not all(c["ok"] for c in safe["checks"]):
         print("SAFE MODE CHECK FAILED", file=sys.stderr)

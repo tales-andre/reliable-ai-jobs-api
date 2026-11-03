@@ -118,7 +118,7 @@ def process(conn: psycopg.Connection, job: dict, provider: HttpProvider, setting
         if job["dry_run"] or settings.dry_run:
             text = (f"[dry run] would send about {estimate_tokens(job['prompt'])} input tokens to "
                     f"'{provider.name}' with max_tokens={job['max_tokens']}; "
-                    f"worst-case cost {fmt_usd(job['estimate_micros'])}. Provider not called.")
+                    f"estimated maximum cost {fmt_usd(job['estimate_micros'])}. Provider not called.")
             _finish_attempt(conn, jid, attempt, "dry_run")
             conn.execute("UPDATE jobs SET status = 'succeeded', result = %s, lease_until = NULL, "
                          "finished_at = clock_timestamp(), updated_at = now() WHERE id = %s", (text, jid))
@@ -127,7 +127,7 @@ def process(conn: psycopg.Connection, job: dict, provider: HttpProvider, setting
         amount = job["estimate_micros"]
         if provider.dedupes:
             # All attempts of this job share one charge at the provider, so the job never
-            # needs more than its worst case in total: earlier unconfirmed attempts
+            # needs more than its estimate in total: earlier unconfirmed attempts
             # already hold part of it.
             amount = max(0, amount - ledger.job_spent(conn, jid))
         try:
@@ -136,6 +136,9 @@ def process(conn: psycopg.Connection, job: dict, provider: HttpProvider, setting
             msg = (f"spending cap reached: this call may cost up to {fmt_usd(job['estimate_micros'])} and "
                    f"{fmt_usd(max(0, e.remaining_micros))} of {fmt_usd(e.cap_micros)} was left after what is "
                    f"spent and reserved for calls in flight. Provider not called.")
+            if e.remaining_micros < 0:
+                msg += (f" Spending is already {fmt_usd(-e.remaining_micros)} over the cap because a call "
+                        f"cost more than its estimate.")
             _finish_attempt(conn, jid, attempt, "budget_exceeded", detail=msg)
             _fail(conn, jid, "budget_exceeded", msg)
             log(worker_id, f"job {short(jid)} attempt {attempt}: refused, spending cap reached")

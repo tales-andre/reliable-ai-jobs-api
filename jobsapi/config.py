@@ -13,6 +13,11 @@ def _bool(name: str, default: bool) -> bool:
     return _env(name, "1" if default else "0").strip().lower() in ("1", "true", "yes", "on")
 
 
+# (PROVIDER_TIMEOUT, LEASE_SECONDS) defaults; the lease must be >= 2 * timeout + 1.
+FAKE_TIMEOUTS = ("1.0", "4")
+REAL_TIMEOUTS = ("60", "121")
+
+
 @dataclass(frozen=True)
 class Settings:
     database_url: str
@@ -32,13 +37,17 @@ class Settings:
 
     @classmethod
     def from_env(cls) -> "Settings":
+        provider = _env("PROVIDER", "fake").strip().lower()
+        # The local fake provider answers in well under a second, so short values keep
+        # the demo fast. A real model can take tens of seconds for a long reply.
+        timeout_default, lease_default = REAL_TIMEOUTS if provider != "fake" else FAKE_TIMEOUTS
         s = cls(
             database_url=_env("DATABASE_URL", "postgresql://jobs:jobs@127.0.0.1:54330/jobs"),
-            provider=_env("PROVIDER", "fake").lower(),
+            provider=provider,
             fake_provider_url=_env("FAKE_PROVIDER_URL", "http://127.0.0.1:8090"),
             llm_model=_env("LLM_MODEL", ""),
-            provider_timeout_s=float(_env("PROVIDER_TIMEOUT", "1.0")),
-            lease_s=float(_env("LEASE_SECONDS", "4")),
+            provider_timeout_s=float(_env("PROVIDER_TIMEOUT", "") or timeout_default),
+            lease_s=float(_env("LEASE_SECONDS", "") or lease_default),
             max_attempts=int(_env("MAX_ATTEMPTS", "5")),
             backoff_base_s=float(_env("BACKOFF_BASE", "0.2")),
             backoff_cap_s=float(_env("BACKOFF_CAP", "3.0")),
@@ -54,8 +63,9 @@ class Settings:
     def validate(self) -> None:
         if self.provider not in ("fake", "openai", "anthropic"):
             raise ValueError(f"PROVIDER must be fake, openai or anthropic, got {self.provider!r}")
-        # One provider call must always finish (or time out) well inside the lease,
-        # otherwise another worker could take the job back while it is still running.
+        # One provider call always ends within 2 * PROVIDER_TIMEOUT (see providers.py),
+        # and it must end inside the lease, otherwise another worker could take the
+        # job back while it is still running.
         if self.lease_s < 2 * self.provider_timeout_s + 1:
             raise ValueError("LEASE_SECONDS must be at least 2 * PROVIDER_TIMEOUT + 1")
         if self.max_attempts < 1:

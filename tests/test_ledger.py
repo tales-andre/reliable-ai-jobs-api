@@ -81,6 +81,23 @@ def test_release_returns_the_money(conn):
     assert (b.reserved_micros, b.spent_micros, b.remaining_micros) == (0, 0, b.cap_micros)
 
 
+def test_real_cost_above_the_reservation_is_recorded_and_blocks_new_calls(conn):
+    """A real provider can report more usage than the estimate. The ledger records the
+    real cost (spent may pass the cap), says so, and refuses every new reservation."""
+    set_cap(conn, 110)
+    j = new_job(conn)
+    ledger.reserve(conn, j, "c1", 110)
+    assert ledger.close(conn, "c1", 180, "settled") is True
+    b = ledger.snapshot(conn)
+    assert (b.reserved_micros, b.spent_micros, b.remaining_micros) == (0, 180, -70)
+    reason = conn.execute("SELECT reason FROM ledger WHERE call_key = 'c1' AND kind = 'close'").fetchone()["reason"]
+    assert "70 micros above the reservation" in reason
+    for amount in (0, 1, 50):
+        with pytest.raises(ledger.BudgetExceeded):
+            with conn.transaction():
+                ledger.reserve(conn, j, f"next-{amount}", amount)
+
+
 def test_concurrent_reservations_never_exceed_cap(conn, db_url):
     """20 workers race for a budget that fits 7 reservations: exactly 7 win."""
     set_cap(conn, 700)
@@ -114,29 +131,33 @@ ops = st.lists(st.tuples(st.sampled_from(["reserve", "settle", "unknown", "relea
 @hsettings(max_examples=40, deadline=None, suppress_health_check=[HealthCheck.function_scoped_fixture])
 @given(seq=ops)
 def test_ledger_invariants_hold_for_any_sequence(conn, seq):
-    """Property: whatever order of reserve/settle/release, spent + reserved <= cap
-    and the budget row always equals what the ledger rows say."""
+    """Property: whatever order of reserve/settle/release, the budget row equals what the
+    ledger rows say, and spent + reserved <= cap plus whatever real costs went above
+    their reservation. Settles may exceed the reservation (a real provider can report
+    more usage than estimated); while the budget is over the cap, no reservation is granted."""
     conn.execute("TRUNCATE ledger, attempts, jobs CASCADE")
     conn.execute("UPDATE budget SET cap_micros = 1000, reserved_micros = 0, spent_micros = 0")
     j = new_job(conn)
     for op, k, amount in seq:
         key = f"c{k}"
         if op == "reserve":
+            before = ledger.snapshot(conn)
             try:
                 with conn.transaction():
                     ledger.reserve(conn, j, key, amount)
             except ledger.BudgetExceeded:
                 pass
+            if before.remaining_micros < 0:
+                after = ledger.snapshot(conn)
+                assert after.reserved_micros == before.reserved_micros, "no new reservation while over the cap"
         elif op == "reconcile":
             before = ledger.job_spent(conn, j)
             refunded = ledger.reconcile(conn, j, amount)
             assert ledger.job_spent(conn, j) == before - refunded
             assert ledger.job_spent(conn, j) >= min(before, amount)   # never below what was confirmed
         else:
-            row = conn.execute("SELECT amount_micros FROM ledger WHERE call_key=%s AND kind='reserve'",
-                               (key,)).fetchone()
-            spent = {"settle": min(amount, row["amount_micros"]) if row else amount,
-                     "unknown": None, "release": 0}[op]
+            # settle may be above the reservation (real usage beat the estimate)
+            spent = {"settle": amount, "unknown": None, "release": 0}[op]
             ledger.close(conn, key, spent, op)
         b = ledger.snapshot(conn)
         open_res = conn.execute(
@@ -144,6 +165,9 @@ def test_ledger_invariants_hold_for_any_sequence(conn, seq):
             "(SELECT 1 FROM ledger c WHERE c.call_key=r.call_key AND c.kind='close')").fetchone()["s"]
         closed = conn.execute("SELECT coalesce(sum(CASE kind WHEN 'close' THEN amount_micros "
                               "WHEN 'refund' THEN -amount_micros END),0) AS s FROM ledger").fetchone()["s"]
-        assert b.spent_micros + b.reserved_micros <= b.cap_micros
+        excess = conn.execute(
+            "SELECT coalesce(sum(greatest(c.amount_micros - r.amount_micros, 0)),0) AS s FROM ledger c "
+            "JOIN ledger r ON r.call_key = c.call_key AND r.kind = 'reserve' WHERE c.kind = 'close'").fetchone()["s"]
+        assert b.spent_micros + b.reserved_micros <= b.cap_micros + excess
         assert b.reserved_micros == open_res
         assert b.spent_micros == closed

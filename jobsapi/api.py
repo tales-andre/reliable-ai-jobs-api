@@ -85,7 +85,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 b = ledger.snapshot(conn)
                 if estimate > b.remaining_micros:
                     raise HTTPException(402, f"Spending cap: this job may cost up to {fmt_usd(estimate)} and "
-                                             f"only {fmt_usd(b.remaining_micros)} of {fmt_usd(b.cap_micros)} "
+                                             f"only {fmt_usd(max(0, b.remaining_micros))} of {fmt_usd(b.cap_micros)} "
                                              f"is left. Job not created.")
             if existing is None:
                 existing = conn.execute(

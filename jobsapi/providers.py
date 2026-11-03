@@ -6,6 +6,7 @@ whether the call may have been charged (see retry.py).
 from __future__ import annotations
 
 import os
+import time
 from dataclasses import dataclass
 
 import httpx
@@ -29,14 +30,37 @@ class HttpProvider:
 
     def __init__(self, settings: Settings, transport: httpx.BaseTransport | None = None):
         self.settings = settings
-        self.client = httpx.Client(timeout=settings.provider_timeout_s, transport=transport)
+        # httpx timeouts apply per phase (connect, write, each read), not to the whole
+        # call, so each phase gets half of PROVIDER_TIMEOUT and _post adds an overall
+        # deadline. A call therefore ends within 2 * PROVIDER_TIMEOUT, inside the lease.
+        half = settings.provider_timeout_s / 2
+        self.client = httpx.Client(timeout=httpx.Timeout(half), transport=transport)
 
     def close(self) -> None:
         self.client.close()
 
+    def _send(self, url: str, json: dict, headers: dict) -> httpx.Response:
+        """POST and read the whole reply, giving up once PROVIDER_TIMEOUT has passed.
+
+        The deadline is checked between chunks of the reply, so a reply that trickles
+        in slowly cannot keep the call alive past the lease.
+        """
+        deadline = time.monotonic() + self.settings.provider_timeout_s
+        with self.client.stream("POST", url, json=json, headers=headers) as resp:
+            body = []
+            for chunk in resp.iter_bytes():
+                body.append(chunk)
+                if time.monotonic() > deadline:
+                    raise httpx.ReadTimeout("overall deadline passed", request=resp.request)
+            # The body is already decoded: drop the headers that describe the wire format.
+            headers = [(k, v) for k, v in resp.headers.multi_items()
+                       if k.lower() not in ("content-encoding", "content-length", "transfer-encoding")]
+            return httpx.Response(resp.status_code, headers=headers, content=b"".join(body),
+                                  request=resp.request)
+
     def _post(self, url: str, json: dict, headers: dict) -> httpx.Response:
         try:
-            resp = self.client.post(url, json=json, headers=headers)
+            resp = self._send(url, json, headers)
         except httpx.ConnectError as e:            # never reached the provider
             raise ProviderError("connect_failed", str(e) or "could not connect", NOT_CHARGED) from e
         except httpx.ConnectTimeout as e:

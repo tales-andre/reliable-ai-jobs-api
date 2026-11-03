@@ -48,6 +48,9 @@ def test_kill_worker_mid_call_then_recover(conn, db_url):
         procs.append(w1)
         wait_for(lambda: conn.execute("SELECT 1 FROM attempts WHERE job_id = %s AND finished_at IS NULL",
                                       (job_id,)).fetchone(), 30)
+        # The attempt row is written before the HTTP call; wait until the provider has
+        # really received it, so the kill lands mid-call and not just before it.
+        wait_for(lambda: httpx.get(f"{url}/_bill", timeout=1).json()["calls"] >= 1, 30)
         w1.kill()                                    # abrupt: no cleanup code runs
         w1.wait()
         job = conn.execute("SELECT status FROM jobs WHERE id = %s", (job_id,)).fetchone()

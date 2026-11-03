@@ -14,6 +14,9 @@ x-app: &app
     PRICE_IN_MICROS: ${PRICE_IN_MICROS:-10}
     PRICE_OUT_MICROS: ${PRICE_OUT_MICROS:-10}
     DRY_RUN: ${DRY_RUN:-0}
+    # Empty = default for the provider: 1 s / 4 s for the fake one, 60 s / 121 s for real ones.
+    PROVIDER_TIMEOUT: ${PROVIDER_TIMEOUT:-}
+    LEASE_SECONDS: ${LEASE_SECONDS:-}
   depends_on:
     db:
       condition: service_healthy

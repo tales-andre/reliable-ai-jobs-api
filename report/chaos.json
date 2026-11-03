@@ -14,48 +14,56 @@
      "id": "duplicate_jobs",
      "label": "Repeated POSTs that created a second job",
      "value": 26,
+     "where": "API",
      "ok": false
     },
     {
      "id": "lost_jobs",
      "label": "Jobs lost (never finished) after workers were killed",
-     "value": 5,
+     "value": 4,
+     "where": "worker",
      "ok": false
     },
     {
      "id": "duplicate_charges",
      "label": "Requests the provider charged more than once",
-     "value": 35,
+     "value": 44,
+     "where": "API + worker",
      "ok": false
     },
     {
      "id": "over_cap",
      "label": "Provider charges above the spending cap",
-     "value": "$0.0263",
+     "value": "$0.0337",
+     "where": "API + worker",
      "ok": false
     },
     {
      "id": "retried_permanent",
      "label": "Retries after an error that cannot succeed",
-     "value": 12,
+     "value": 16,
+     "where": "worker",
      "ok": false
     },
     {
      "id": "unexplained_failures",
      "label": "Failed jobs without a reason",
      "value": 0,
+     "where": "worker",
      "ok": true
     },
     {
      "id": "ledger_covers_bill",
      "label": "Our ledger counted at least what the provider charged",
      "value": "not tracked",
+     "where": "worker",
      "ok": false
     },
     {
      "id": "worker_crashes",
      "label": "Workers that crashed on their own",
      "value": 0,
+     "where": "worker",
      "ok": true
     }
    ],
@@ -66,1850 +74,2001 @@
      "201": 66
     },
     "jobs": 66,
-    "succeeded": 56,
+    "succeeded": 57,
     "failed": {
      "error": 5
     },
-    "stuck": 5,
-    "attempts": 107,
+    "stuck": 4,
+    "attempts": 121,
     "attempt_outcomes": {
-     "bad_request": 16,
-     "ok": 56,
+     "ok": 57,
+     "bad_request": 20,
+     "timeout": 21,
      "rate_limited": 12,
-     "timeout": 13,
      "in flight": 4,
-     "server_error": 6
+     "server_error": 7
     },
-    "workers_killed": 5,
-    "provider_calls": 107,
-    "provider_charges": 73,
-    "provider_billed_micros": 68340,
+    "workers_killed": 4,
+    "provider_calls": 121,
+    "provider_charges": 82,
+    "dup_charges_from_duplicate_jobs": 24,
+    "dup_charges_from_retries": 20,
+    "provider_billed_micros": 75730,
     "cap_micros": 42000,
     "ledger_spent_micros": null
    },
    "check_lines": [
     "-- naive mode checks: 2/8 passed",
     "   FAIL  Repeated POSTs that created a second job: 26",
-    "   FAIL  Jobs lost (never finished) after workers were killed: 5",
-    "   FAIL  Requests the provider charged more than once: 35",
-    "   FAIL  Provider charges above the spending cap: $0.0263",
-    "   FAIL  Retries after an error that cannot succeed: 12",
+    "   FAIL  Jobs lost (never finished) after workers were killed: 4",
+    "   FAIL  Requests the provider charged more than once: 44",
+    "   FAIL  Provider charges above the spending cap: $0.0337",
+    "   FAIL  Retries after an error that cannot succeed: 16",
     "   PASS  Failed jobs without a reason: 0",
     "   FAIL  Our ledger counted at least what the provider charged: not tracked",
     "   PASS  Workers that crashed on their own: 0"
    ],
    "kills": [
     {
-     "worker": "w3",
-     "job_id": "d2e49844-6c72-4b3e-ae7b-9ec03fcd8604",
+     "worker": "w1",
+     "job_id": "9db1885a-36ec-4230-b1d3-c496b9210a11",
      "attempt": 1,
-     "at": "2026-11-03T12:25:37.676934+00:00",
-     "t": 3.9940864000000147
+     "at": "2026-11-03T13:01:41.812482+00:00",
+     "t": 3.740191199999572
     },
     {
      "worker": "w4",
-     "job_id": "c05556fb-b2a9-4604-80df-e6b0ae5236b6",
+     "job_id": "79d3d6ab-99ff-4ac9-92f9-f5b681750a46",
      "attempt": 1,
-     "at": "2026-11-03T12:25:39.438122+00:00",
-     "t": 5.696330900000248
+     "at": "2026-11-03T13:01:43.498998+00:00",
+     "t": 5.369589399999313
     },
     {
-     "worker": "w1",
-     "job_id": "65b67fe1-54a0-434a-a663-6c9cbc1d34b0",
+     "worker": "w3",
+     "job_id": "1a092814-7f2e-4e07-8dfc-5cb71720be39",
      "attempt": 1,
-     "at": "2026-11-03T12:25:40.624273+00:00",
-     "t": 6.845755100000133
-    },
-    {
-     "worker": "w2",
-     "job_id": "1bfc69d9-241c-4cc0-b9ff-a6b1088af9e4",
-     "attempt": 1,
-     "at": "2026-11-03T12:25:42.205235+00:00",
-     "t": 8.38752470000054
+     "at": "2026-11-03T13:01:44.696103+00:00",
+     "t": 6.5295854999994845
     },
     {
      "worker": "w7",
-     "job_id": "a7b7a2f9-5f38-4b0f-a824-630308cca07d",
+     "job_id": "5adbd3e5-20be-4e38-b0d6-894d2b81502a",
      "attempt": 1,
-     "at": "2026-11-03T12:25:43.196896+00:00",
-     "t": 10.181506200000513
+     "at": "2026-11-03T13:01:45.624153+00:00",
+     "t": 7.4292179999993095
     }
    ],
    "timeline": {
-    "t0": "2026-11-03T12:25:37.658481+00:00",
+    "t0": "2026-11-03T13:01:41.003486+00:00",
     "jobs": [
      {
-      "id": "d2e49844-6c72-4b3e-ae7b-9ec03fcd8604",
-      "key": "ticket-42-000#0",
-      "status": "running",
-      "error_kind": null
-     },
-     {
-      "id": "24dd921e-1c02-456e-971b-eab4ea0d9ac0",
-      "key": "ticket-42-001#0",
+      "id": "24dce07c-0f03-495d-b9d0-d886262f0684",
+      "key": "ticket-42-001#3c064c29",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "3194a373-3c3d-4c20-b7df-5b1d15b86ae3",
-      "key": "ticket-42-001#1",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "b172e818-e895-4696-b309-ee2133dbb51c",
-      "key": "ticket-42-001#2",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "e8094cfa-b52c-4c00-8ea2-068a4ec61f16",
-      "key": "ticket-42-002#0",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "0cb70908-0761-4d60-b311-b88e782b988a",
-      "key": "ticket-42-003#0",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "de764b64-5790-4106-970b-bae8f9b52643",
-      "key": "ticket-42-003#1",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "db44ffcd-071d-4baa-8585-95f7233b8f4b",
-      "key": "ticket-42-004#0",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "7cfdf9bf-72e4-431c-9da5-b7c69528752c",
-      "key": "ticket-42-004#1",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "f7cdd802-deaf-483e-afb4-fe59aef57f66",
-      "key": "ticket-42-004#2",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "1cc13a18-8b24-4c62-9677-8999b5adae9a",
-      "key": "ticket-42-005#0",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "7c664a7c-2e95-43b2-92cb-2ebbf05b0b9a",
-      "key": "ticket-42-006#0",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "6967eda6-281f-4220-bff2-8a0a8e8e8f1e",
-      "key": "ticket-42-006#1",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "a850503f-baa7-4a3c-a7c6-1c6f1fef83b2",
-      "key": "ticket-42-006#2",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "9c2d8563-07c0-431a-a6ac-d977d4e40e2d",
-      "key": "ticket-42-007#0",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "c05556fb-b2a9-4604-80df-e6b0ae5236b6",
-      "key": "ticket-42-008#0",
-      "status": "running",
-      "error_kind": null
-     },
-     {
-      "id": "7b6547dd-a12c-42ec-8a9d-e1df99fde81a",
-      "key": "ticket-42-009#0",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "c10a47a1-3fdf-46f1-aeb9-60e4e201ac47",
-      "key": "ticket-42-010#0",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "6daea464-8067-4ca8-903a-1f6047fac6eb",
-      "key": "ticket-42-011#0",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "1d557d3c-5299-4c72-9589-c3aaf1a93f27",
-      "key": "ticket-42-011#1",
+      "id": "2157b8ed-4c26-46f9-840a-621e5c814bea",
+      "key": "ticket-42-000#e1753c25",
       "status": "failed",
       "error_kind": null
      },
      {
-      "id": "872d0cd0-6805-46b5-ae2f-f846ec3a72c1",
-      "key": "ticket-42-011#2",
+      "id": "07b09126-d47e-4b41-bb29-460549044f39",
+      "key": "ticket-42-001#60470893",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "9d9ccc37-cee9-4091-8c05-8cd68de21813",
-      "key": "ticket-42-012#0",
+      "id": "d9996909-0624-45fb-8038-b3ba3689c5f0",
+      "key": "ticket-42-001#369b812a",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "4d04f1ed-b805-4e40-8c40-d9a6f9898dc8",
-      "key": "ticket-42-013#0",
+      "id": "58468dd1-187e-4f4a-855f-ad5a97ac1f03",
+      "key": "ticket-42-003#6b14fac9",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "65b67fe1-54a0-434a-a663-6c9cbc1d34b0",
-      "key": "ticket-42-014#0",
+      "id": "cac59c4c-e76d-444f-9510-ce7a83b91d08",
+      "key": "ticket-42-002#c9f60c0f",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "af837801-1679-4d35-b3f1-1640a701041a",
+      "key": "ticket-42-003#19e6d8db",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "ba5c2ae2-861b-4643-89de-b39ee3f4d804",
+      "key": "ticket-42-004#b903ae1c",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "9ff3c9b6-eba9-4786-aaf6-452002d5cd63",
+      "key": "ticket-42-004#b0959254",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "169b3e50-efb7-4923-9e74-9f8c2323abeb",
+      "key": "ticket-42-004#2692677b",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "44b1e61d-c38e-4502-a60e-51815d8f1e4b",
+      "key": "ticket-42-005#bd602aca",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "1d45306c-c797-45a4-ab04-46cbce6c6926",
+      "key": "ticket-42-006#38061fa3",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "912834b5-48d4-4ab8-bc88-aff31c6aa514",
+      "key": "ticket-42-006#4adaa830",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "1065683f-1800-4358-8e52-b300fd7d0acc",
+      "key": "ticket-42-006#2c644d59",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "19c11986-ebd4-4026-a244-42734adfc794",
+      "key": "ticket-42-007#ac5ac48b",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "50ff1ed7-8796-4138-ae53-b24ebb5f8319",
+      "key": "ticket-42-009#0821abad",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "9db1885a-36ec-4230-b1d3-c496b9210a11",
+      "key": "ticket-42-008#389aa9dc",
       "status": "running",
       "error_kind": null
      },
      {
-      "id": "b677b5c3-ddfc-4845-affe-f930ea568c60",
-      "key": "ticket-42-015#0",
+      "id": "9efa12ce-a285-4c26-bfdb-6a4ade3942a7",
+      "key": "ticket-42-010#1c7bc0f4",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "c7de9387-5f4a-43f9-957c-14abab7e8be5",
-      "key": "ticket-42-016#0",
+      "id": "ac215ed5-0dc1-4f2b-b33e-7333640dc5e0",
+      "key": "ticket-42-011#25ebf0b6",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "d78b4b2d-c48a-4bc2-a8be-60c1e9d6f7cb",
-      "key": "ticket-42-017#0",
+      "id": "1d56f9df-c966-4324-bd49-1664df186f37",
+      "key": "ticket-42-011#e8310123",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "f45d1200-c1f5-495b-8c2e-8ad8189ecd32",
-      "key": "ticket-42-017#1",
+      "id": "2788b856-10d9-48ac-8b6d-c2362945d4dd",
+      "key": "ticket-42-011#93dfb5e9",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "2bce68cd-0f2f-48f5-b11d-3cb34ca03e72",
-      "key": "ticket-42-018#0",
+      "id": "0d9af6c4-1542-4917-850b-8b70b8018b1d",
+      "key": "ticket-42-012#700892eb",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "88c8d1a0-cdaa-4323-bde0-a2378e2bcb29",
-      "key": "ticket-42-019#0",
+      "id": "81aa4ae9-581a-44b0-80f0-0cb4d3ece152",
+      "key": "ticket-42-013#a873f841",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "1bfc69d9-241c-4cc0-b9ff-a6b1088af9e4",
-      "key": "ticket-42-020#0",
+      "id": "6e04417a-e5f7-4194-a9b5-0ab6a090d69a",
+      "key": "ticket-42-015#e77ab2d6",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "03f54ed8-2194-4db6-bd8b-dfe59cd97ca3",
+      "key": "ticket-42-014#31abe20b",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "45899743-cabd-4396-8200-3e10f3179259",
+      "key": "ticket-42-017#f547569c",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "f8ae573d-6e02-4589-9fab-8b16802316cd",
+      "key": "ticket-42-017#7c740b0c",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "bb0c62f8-c9cf-4db1-b946-36f59b84599d",
+      "key": "ticket-42-016#cdac6a84",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "f1dfad53-762e-4832-9dee-de1f9b40bc17",
+      "key": "ticket-42-018#70ee66de",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "4482c918-bce0-4d12-918b-d1266f7d708d",
+      "key": "ticket-42-019#177d4f7a",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "2bd5d1bb-1b76-4a54-8436-b6c726547d4d",
+      "key": "ticket-42-020#928167a8",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "b443c7c3-117d-47a1-ba0f-16808c823d03",
+      "key": "ticket-42-021#e607dc9c",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "9f5a7edf-fd9a-40d7-b8c3-fab2f87093ea",
+      "key": "ticket-42-021#75ce157e",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "5db1743c-11d6-4ff6-99dc-0822614c0027",
+      "key": "ticket-42-022#4b8f50d2",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "9444e945-5e26-4dd4-a826-f7af08bc22ba",
+      "key": "ticket-42-022#3615deda",
+      "status": "failed",
+      "error_kind": null
+     },
+     {
+      "id": "d3b1473d-31ac-47c1-a686-d65c6f0e9bc4",
+      "key": "ticket-42-021#1d41072b",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "ef87fdb6-ebb5-4757-b8ac-db599fd87155",
+      "key": "ticket-42-023#fb784e50",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "79d3d6ab-99ff-4ac9-92f9-f5b681750a46",
+      "key": "ticket-42-024#38f78fcb",
       "status": "running",
       "error_kind": null
      },
      {
-      "id": "f86dfcf2-09c6-4aa3-9064-d90c8edb4f0c",
-      "key": "ticket-42-021#0",
+      "id": "a938b8e5-9369-4cca-be90-f97225f3fc3d",
+      "key": "ticket-42-024#874a50c1",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "7e64b85d-92ab-42e4-ad9a-3f9e8c9ba431",
-      "key": "ticket-42-021#1",
+      "id": "509f6893-2bb9-408b-b2b8-df89e1c6d5df",
+      "key": "ticket-42-025#feb00aa0",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "ea4cd999-cb2c-46ab-b8b9-815e8198eb45",
-      "key": "ticket-42-021#2",
+      "id": "f6f0b633-98d1-4a84-9ce5-f56e2f41c6bd",
+      "key": "ticket-42-025#88c9b5ad",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "67dff411-7930-480b-8165-2dd6a2485951",
-      "key": "ticket-42-022#0",
+      "id": "fa24c7fa-a673-4ada-ab40-4cf38f168629",
+      "key": "ticket-42-026#4d12825c",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "a9857b91-48d3-4975-bc2d-2a2ca9723f00",
-      "key": "ticket-42-022#1",
-      "status": "failed",
-      "error_kind": null
-     },
-     {
-      "id": "361fe376-1bb1-410a-9c92-8fa98382112d",
-      "key": "ticket-42-023#0",
+      "id": "1dbb394d-d229-4147-8331-71a744354ede",
+      "key": "ticket-42-027#37dc0bbc",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "a7b7a2f9-5f38-4b0f-a824-630308cca07d",
-      "key": "ticket-42-024#0",
+      "id": "cda1e84d-f855-43b9-ba47-cf6511e64eb3",
+      "key": "ticket-42-027#64903c25",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "7c58552e-7aab-4738-a7b2-a0b233d73a14",
+      "key": "ticket-42-028#704cd9e3",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "afef8770-f863-4cc2-88d5-938e752e8136",
+      "key": "ticket-42-029#a84d01d2",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "47db990a-454b-4fe9-aec4-93e1cd8fd3cb",
+      "key": "ticket-42-028#238fdec6",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "b1066f57-6f69-4ab9-afdf-73cbc9eb5aca",
+      "key": "ticket-42-029#a5ceae35",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "05a6c92b-eac6-4ee1-9853-f14d6e05dc29",
+      "key": "ticket-42-029#80b48a5c",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "1a092814-7f2e-4e07-8dfc-5cb71720be39",
+      "key": "ticket-42-030#2adcb0f8",
       "status": "running",
       "error_kind": null
      },
      {
-      "id": "45373c48-d89d-4b2c-8f11-e40a615d8441",
-      "key": "ticket-42-024#1",
+      "id": "6ebfd917-afd7-46fe-9a62-f566d234be47",
+      "key": "ticket-42-031#6f7ba80e",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "b4c41295-61ed-4582-a7a7-53a99e0d378b",
-      "key": "ticket-42-025#0",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "7bdb847d-87e0-4f2d-a1f5-3207c1ca8a82",
-      "key": "ticket-42-025#1",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "07132bd7-d7f2-4bf9-9409-fb9ec868f608",
-      "key": "ticket-42-026#0",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "325037ec-2380-4559-888b-b7a29d065a01",
-      "key": "ticket-42-027#0",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "80b594b1-9ac3-409f-ba88-973a15d40921",
-      "key": "ticket-42-027#1",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "14f8a43d-5fca-4f5b-8305-1709c5eeb153",
-      "key": "ticket-42-028#0",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "30d41693-2c16-4909-a362-ce32bec02ae1",
-      "key": "ticket-42-028#1",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "d8722f9f-60f5-4e1f-8d38-79e8a5d88a20",
-      "key": "ticket-42-029#0",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "8f25e4cb-aea6-4e57-ba0b-87fcd414c94c",
-      "key": "ticket-42-029#1",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "fdc3cbe2-d81d-43b8-82f3-97d0db51fad6",
-      "key": "ticket-42-029#2",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "386ffbe9-71b8-481b-ac3d-82f44cc00899",
-      "key": "ticket-42-030#0",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "b9564a38-c5bc-406c-87b1-aecc22b1ff80",
-      "key": "ticket-42-031#0",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "ac8ccefc-4169-4910-9431-6acbcd1bbb34",
-      "key": "ticket-42-032#0",
+      "id": "6e903eeb-215a-49b7-9d98-29d0cfbec4a3",
+      "key": "ticket-42-032#a231d9f4",
       "status": "failed",
       "error_kind": null
      },
      {
-      "id": "f464061f-94c1-4288-a5b3-dedf6a1c493e",
-      "key": "ticket-42-032#1",
+      "id": "5bfd4d76-ab7d-4082-936f-0c9a30af5483",
+      "key": "ticket-42-032#89402e01",
       "status": "failed",
       "error_kind": null
      },
      {
-      "id": "c617c4ab-7d20-4428-8a86-77e1d76bd626",
-      "key": "ticket-42-032#2",
+      "id": "2b343347-57b8-492d-9362-0ca13404da7c",
+      "key": "ticket-42-032#89d876a0",
       "status": "failed",
       "error_kind": null
      },
      {
-      "id": "c44c5e91-6c0a-4102-a269-97c9cb79940f",
-      "key": "ticket-42-033#0",
+      "id": "6fec0fd8-8b78-4729-837b-59bc3a522d06",
+      "key": "ticket-42-034#acfd7e2d",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "7c993947-f719-4506-ab01-d5b3d3d62fb8",
-      "key": "ticket-42-033#1",
+      "id": "290bc3cb-6503-4047-903c-fd439e4b5d68",
+      "key": "ticket-42-033#5889fc0f",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "499a6a7e-424d-4f02-8454-f66ab7c6cacc",
-      "key": "ticket-42-034#0",
+      "id": "76c932b9-2365-47dc-b8e7-fda0b9bb5c81",
+      "key": "ticket-42-033#240b516a",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "d34238d8-b533-46ab-8391-464324b5dc56",
-      "key": "ticket-42-034#1",
+      "id": "3fc43c40-e3a8-40da-a052-4087c1565360",
+      "key": "ticket-42-034#5cbf8e9b",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "e1c67b4b-634a-4925-b6c2-00b0cffd15f0",
-      "key": "ticket-42-034#2",
+      "id": "382b5b3e-a817-4b14-a83e-8f8435a527dc",
+      "key": "ticket-42-034#8b4d010c",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "d949d823-498b-40f1-a924-6439b0efa963",
-      "key": "ticket-42-035#0",
+      "id": "a4041b61-917f-47b8-9b7b-152d1094a9e9",
+      "key": "ticket-42-035#5d0766f4",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "c52e6792-5bf8-4c77-b33b-280b09883392",
-      "key": "ticket-42-035#1",
+      "id": "27e09ecf-2897-4e59-9f9a-000b93e07f5b",
+      "key": "ticket-42-035#a490ec4a",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "406bba7c-f1a8-4962-afd2-36820bcddbc1",
-      "key": "ticket-42-036#0",
+      "id": "6ef53856-6c26-4b36-894b-16520fee7087",
+      "key": "ticket-42-036#c6680154",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "27fcd456-570f-4c66-8f29-e2c99a3f77a2",
-      "key": "ticket-42-037#0",
+      "id": "5adbd3e5-20be-4e38-b0d6-894d2b81502a",
+      "key": "ticket-42-039#7384012c",
+      "status": "running",
+      "error_kind": null
+     },
+     {
+      "id": "41e23d0b-8e57-4d97-b8f6-c2286503f44c",
+      "key": "ticket-42-037#ce505fba",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "32a953a8-7e4a-45ba-942f-b3a37f8480f8",
-      "key": "ticket-42-038#0",
+      "id": "aeb435d7-52ca-4426-80b5-dc5891360762",
+      "key": "ticket-42-038#35f8bcdb",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "9c2af4be-562f-4f39-a4bc-1cadaeac5e92",
-      "key": "ticket-42-039#0",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "5199945f-b914-44c7-bfa8-dc3e1d5b7041",
-      "key": "ticket-42-039#1",
+      "id": "bd238b8b-b21a-4a48-b1f9-fc9a586e3e45",
+      "key": "ticket-42-039#08a2d34f",
       "status": "succeeded",
       "error_kind": null
      }
     ],
     "attempts": [
      {
-      "job_id": "d2e49844-6c72-4b3e-ae7b-9ec03fcd8604",
+      "job_id": "24dce07c-0f03-495d-b9d0-d886262f0684",
+      "attempt": 1,
+      "worker": "w1",
+      "start": 0.0,
+      "end": 0.012461,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "d9996909-0624-45fb-8038-b3ba3689c5f0",
+      "attempt": 1,
+      "worker": "w1",
+      "start": 0.027134,
+      "end": 0.032618,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "2157b8ed-4c26-46f9-840a-621e5c814bea",
       "attempt": 1,
       "worker": "w3",
-      "start": 0.0,
-      "end": 0.01656,
+      "start": 0.032259,
+      "end": 0.065003,
       "outcome": "bad_request"
      },
      {
-      "job_id": "24dd921e-1c02-456e-971b-eab4ea0d9ac0",
-      "attempt": 1,
-      "worker": "w1",
-      "start": 0.072973,
-      "end": 0.090713,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "3194a373-3c3d-4c20-b7df-5b1d15b86ae3",
+      "job_id": "07b09126-d47e-4b41-bb29-460549044f39",
       "attempt": 1,
       "worker": "w2",
-      "start": 0.081388,
-      "end": 0.102621,
+      "start": 0.033734,
+      "end": 0.257922,
       "outcome": "ok"
      },
      {
-      "job_id": "b172e818-e895-4696-b309-ee2133dbb51c",
+      "job_id": "cac59c4c-e76d-444f-9510-ce7a83b91d08",
       "attempt": 1,
       "worker": "w1",
-      "start": 0.115494,
-      "end": 0.348526,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "e8094cfa-b52c-4c00-8ea2-068a4ec61f16",
-      "attempt": 1,
-      "worker": "w2",
-      "start": 0.124603,
-      "end": 0.755559,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "0cb70908-0761-4d60-b311-b88e782b988a",
-      "attempt": 1,
-      "worker": "w4",
-      "start": 0.142568,
-      "end": 0.156383,
-      "outcome": "rate_limited"
-     },
-     {
-      "job_id": "0cb70908-0761-4d60-b311-b88e782b988a",
-      "attempt": 2,
-      "worker": "w4",
-      "start": 0.182697,
-      "end": 0.191449,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "de764b64-5790-4106-970b-bae8f9b52643",
-      "attempt": 1,
-      "worker": "w4",
-      "start": 0.211203,
-      "end": 0.838114,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "db44ffcd-071d-4baa-8585-95f7233b8f4b",
-      "attempt": 1,
-      "worker": "w1",
-      "start": 0.366376,
-      "end": 0.373621,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "7cfdf9bf-72e4-431c-9da5-b7c69528752c",
-      "attempt": 1,
-      "worker": "w1",
-      "start": 0.390263,
-      "end": 0.398105,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "f7cdd802-deaf-483e-afb4-fe59aef57f66",
-      "attempt": 1,
-      "worker": "w1",
-      "start": 0.414922,
-      "end": 0.421613,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "1cc13a18-8b24-4c62-9677-8999b5adae9a",
-      "attempt": 1,
-      "worker": "w1",
-      "start": 0.441436,
-      "end": 0.449861,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "7c664a7c-2e95-43b2-92cb-2ebbf05b0b9a",
-      "attempt": 1,
-      "worker": "w1",
-      "start": 0.468031,
-      "end": 0.475084,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "6967eda6-281f-4220-bff2-8a0a8e8e8f1e",
-      "attempt": 1,
-      "worker": "w1",
-      "start": 0.491635,
-      "end": 0.511703,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "a850503f-baa7-4a3c-a7c6-1c6f1fef83b2",
-      "attempt": 1,
-      "worker": "w1",
-      "start": 0.530825,
-      "end": 0.537404,
-      "outcome": "rate_limited"
-     },
-     {
-      "job_id": "a850503f-baa7-4a3c-a7c6-1c6f1fef83b2",
-      "attempt": 2,
-      "worker": "w1",
-      "start": 0.545221,
-      "end": 1.597213,
+      "start": 0.045105,
+      "end": 0.565305,
       "outcome": "timeout"
      },
      {
-      "job_id": "9c2d8563-07c0-431a-a6ac-d977d4e40e2d",
+      "job_id": "58468dd1-187e-4f4a-855f-ad5a97ac1f03",
       "attempt": 1,
-      "worker": "w2",
-      "start": 0.771489,
-      "end": 1.814682,
+      "worker": "w4",
+      "start": 0.046554,
+      "end": 0.054885,
+      "outcome": "rate_limited"
+     },
+     {
+      "job_id": "58468dd1-187e-4f4a-855f-ad5a97ac1f03",
+      "attempt": 2,
+      "worker": "w4",
+      "start": 0.059582,
+      "end": 0.064925,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "2157b8ed-4c26-46f9-840a-621e5c814bea",
+      "attempt": 2,
+      "worker": "w3",
+      "start": 0.070922,
+      "end": 0.075493,
+      "outcome": "bad_request"
+     },
+     {
+      "job_id": "af837801-1679-4d35-b3f1-1640a701041a",
+      "attempt": 1,
+      "worker": "w4",
+      "start": 0.075442,
+      "end": 0.612548,
       "outcome": "timeout"
      },
      {
-      "job_id": "c05556fb-b2a9-4604-80df-e6b0ae5236b6",
+      "job_id": "2157b8ed-4c26-46f9-840a-621e5c814bea",
+      "attempt": 3,
+      "worker": "w3",
+      "start": 0.081677,
+      "end": 0.086071,
+      "outcome": "bad_request"
+     },
+     {
+      "job_id": "2157b8ed-4c26-46f9-840a-621e5c814bea",
+      "attempt": 4,
+      "worker": "w3",
+      "start": 0.090792,
+      "end": 0.094691,
+      "outcome": "bad_request"
+     },
+     {
+      "job_id": "2157b8ed-4c26-46f9-840a-621e5c814bea",
+      "attempt": 5,
+      "worker": "w3",
+      "start": 0.100121,
+      "end": 0.10471,
+      "outcome": "bad_request"
+     },
+     {
+      "job_id": "ba5c2ae2-861b-4643-89de-b39ee3f4d804",
       "attempt": 1,
+      "worker": "w3",
+      "start": 0.118024,
+      "end": 0.123127,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "9ff3c9b6-eba9-4786-aaf6-452002d5cd63",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 0.13368,
+      "end": 0.13743,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "169b3e50-efb7-4923-9e74-9f8c2323abeb",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 0.147288,
+      "end": 0.150936,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "44b1e61d-c38e-4502-a60e-51815d8f1e4b",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 0.160453,
+      "end": 0.164129,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "1d45306c-c797-45a4-ab04-46cbce6c6926",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 0.173698,
+      "end": 0.178582,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "912834b5-48d4-4ab8-bc88-aff31c6aa514",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 0.188873,
+      "end": 0.194079,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "1065683f-1800-4358-8e52-b300fd7d0acc",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 0.203691,
+      "end": 0.208765,
+      "outcome": "rate_limited"
+     },
+     {
+      "job_id": "1065683f-1800-4358-8e52-b300fd7d0acc",
+      "attempt": 2,
+      "worker": "w3",
+      "start": 0.213112,
+      "end": 0.743958,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "19c11986-ebd4-4026-a244-42734adfc794",
+      "attempt": 1,
+      "worker": "w2",
+      "start": 0.270995,
+      "end": 0.790388,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "cac59c4c-e76d-444f-9510-ce7a83b91d08",
+      "attempt": 2,
+      "worker": "w1",
+      "start": 0.571933,
+      "end": 0.598145,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "50ff1ed7-8796-4138-ae53-b24ebb5f8319",
+      "attempt": 1,
+      "worker": "w1",
+      "start": 0.612466,
+      "end": 0.618357,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "af837801-1679-4d35-b3f1-1640a701041a",
+      "attempt": 2,
       "worker": "w4",
-      "start": 0.856312,
+      "start": 0.619226,
+      "end": 1.001664,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "9db1885a-36ec-4230-b1d3-c496b9210a11",
+      "attempt": 1,
+      "worker": "w1",
+      "start": 0.63042,
       "end": null,
       "outcome": null
      },
      {
-      "job_id": "a850503f-baa7-4a3c-a7c6-1c6f1fef83b2",
+      "job_id": "1065683f-1800-4358-8e52-b300fd7d0acc",
       "attempt": 3,
-      "worker": "w1",
-      "start": 1.676227,
-      "end": 1.715554,
+      "worker": "w3",
+      "start": 0.750517,
+      "end": 0.756129,
       "outcome": "ok"
      },
      {
-      "job_id": "7b6547dd-a12c-42ec-8a9d-e1df99fde81a",
+      "job_id": "9efa12ce-a285-4c26-bfdb-6a4ade3942a7",
       "attempt": 1,
-      "worker": "w1",
-      "start": 1.812569,
-      "end": 1.825257,
+      "worker": "w3",
+      "start": 0.768665,
+      "end": 0.772604,
       "outcome": "ok"
      },
      {
-      "job_id": "9c2d8563-07c0-431a-a6ac-d977d4e40e2d",
+      "job_id": "ac215ed5-0dc1-4f2b-b33e-7333640dc5e0",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 0.781293,
+      "end": 0.785219,
+      "outcome": "rate_limited"
+     },
+     {
+      "job_id": "ac215ed5-0dc1-4f2b-b33e-7333640dc5e0",
+      "attempt": 2,
+      "worker": "w3",
+      "start": 0.789664,
+      "end": 0.793392,
+      "outcome": "rate_limited"
+     },
+     {
+      "job_id": "19c11986-ebd4-4026-a244-42734adfc794",
       "attempt": 2,
       "worker": "w2",
-      "start": 1.842249,
-      "end": 1.858957,
+      "start": 0.79688,
+      "end": 0.824915,
       "outcome": "ok"
      },
      {
-      "job_id": "c10a47a1-3fdf-46f1-aeb9-60e4e201ac47",
-      "attempt": 1,
-      "worker": "w1",
-      "start": 1.873405,
-      "end": 1.889966,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "6daea464-8067-4ca8-903a-1f6047fac6eb",
-      "attempt": 1,
-      "worker": "w2",
-      "start": 1.895471,
-      "end": 1.905153,
+      "job_id": "ac215ed5-0dc1-4f2b-b33e-7333640dc5e0",
+      "attempt": 3,
+      "worker": "w3",
+      "start": 0.797848,
+      "end": 0.80196,
       "outcome": "rate_limited"
      },
      {
-      "job_id": "1d557d3c-5299-4c72-9589-c3aaf1a93f27",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 1.90774,
-      "end": 1.924606,
-      "outcome": "rate_limited"
-     },
-     {
-      "job_id": "872d0cd0-6805-46b5-ae2f-f846ec3a72c1",
-      "attempt": 1,
-      "worker": "w1",
-      "start": 1.909225,
-      "end": 1.920081,
-      "outcome": "rate_limited"
-     },
-     {
-      "job_id": "6daea464-8067-4ca8-903a-1f6047fac6eb",
-      "attempt": 2,
-      "worker": "w2",
-      "start": 1.923166,
-      "end": 2.965942,
+      "job_id": "ac215ed5-0dc1-4f2b-b33e-7333640dc5e0",
+      "attempt": 4,
+      "worker": "w3",
+      "start": 0.806878,
+      "end": 1.341132,
       "outcome": "timeout"
      },
      {
-      "job_id": "872d0cd0-6805-46b5-ae2f-f846ec3a72c1",
-      "attempt": 2,
-      "worker": "w1",
-      "start": 1.930206,
-      "end": 1.938181,
+      "job_id": "1d56f9df-c966-4324-bd49-1664df186f37",
+      "attempt": 1,
+      "worker": "w2",
+      "start": 0.839889,
+      "end": 0.845283,
       "outcome": "ok"
      },
      {
-      "job_id": "1d557d3c-5299-4c72-9589-c3aaf1a93f27",
-      "attempt": 2,
-      "worker": "w5",
-      "start": 1.935602,
-      "end": 1.943654,
+      "job_id": "2788b856-10d9-48ac-8b6d-c2362945d4dd",
+      "attempt": 1,
+      "worker": "w2",
+      "start": 0.858065,
+      "end": 0.863036,
       "outcome": "server_error"
      },
      {
-      "job_id": "1d557d3c-5299-4c72-9589-c3aaf1a93f27",
-      "attempt": 3,
-      "worker": "w5",
-      "start": 1.954674,
-      "end": 1.96392,
+      "job_id": "2788b856-10d9-48ac-8b6d-c2362945d4dd",
+      "attempt": 2,
+      "worker": "w2",
+      "start": 0.871696,
+      "end": 0.877125,
       "outcome": "rate_limited"
      },
      {
-      "job_id": "9d9ccc37-cee9-4091-8c05-8cd68de21813",
+      "job_id": "2788b856-10d9-48ac-8b6d-c2362945d4dd",
+      "attempt": 3,
+      "worker": "w2",
+      "start": 0.882805,
+      "end": 1.404677,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "0d9af6c4-1542-4917-850b-8b70b8018b1d",
       "attempt": 1,
-      "worker": "w1",
-      "start": 1.957662,
-      "end": 1.967375,
+      "worker": "w4",
+      "start": 1.016407,
+      "end": 1.022889,
       "outcome": "ok"
      },
      {
-      "job_id": "1d557d3c-5299-4c72-9589-c3aaf1a93f27",
+      "job_id": "81aa4ae9-581a-44b0-80f0-0cb4d3ece152",
+      "attempt": 1,
+      "worker": "w4",
+      "start": 1.038124,
+      "end": 1.042533,
+      "outcome": "server_error"
+     },
+     {
+      "job_id": "81aa4ae9-581a-44b0-80f0-0cb4d3ece152",
+      "attempt": 2,
+      "worker": "w4",
+      "start": 1.048086,
+      "end": 1.582832,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "ac215ed5-0dc1-4f2b-b33e-7333640dc5e0",
+      "attempt": 5,
+      "worker": "w3",
+      "start": 1.347814,
+      "end": 1.779116,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "2788b856-10d9-48ac-8b6d-c2362945d4dd",
+      "attempt": 4,
+      "worker": "w2",
+      "start": 1.409869,
+      "end": 1.438378,
+      "outcome": "rate_limited"
+     },
+     {
+      "job_id": "2788b856-10d9-48ac-8b6d-c2362945d4dd",
+      "attempt": 5,
+      "worker": "w2",
+      "start": 1.444387,
+      "end": 1.850786,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "81aa4ae9-581a-44b0-80f0-0cb4d3ece152",
+      "attempt": 3,
+      "worker": "w4",
+      "start": 1.589069,
+      "end": 1.595531,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "6e04417a-e5f7-4194-a9b5-0ab6a090d69a",
+      "attempt": 1,
+      "worker": "w4",
+      "start": 1.609506,
+      "end": 1.824759,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "03f54ed8-2194-4db6-bd8b-dfe59cd97ca3",
+      "attempt": 1,
+      "worker": "w5",
+      "start": 1.637571,
+      "end": 2.166013,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "45899743-cabd-4396-8200-3e10f3179259",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 1.791401,
+      "end": 1.795374,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "f8ae573d-6e02-4589-9fab-8b16802316cd",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 1.804733,
+      "end": 1.80934,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "bb0c62f8-c9cf-4db1-b946-36f59b84599d",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 1.820311,
+      "end": 1.824665,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "f1dfad53-762e-4832-9dee-de1f9b40bc17",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 1.835667,
+      "end": 1.839911,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "4482c918-bce0-4d12-918b-d1266f7d708d",
+      "attempt": 1,
+      "worker": "w4",
+      "start": 1.836765,
+      "end": 1.84112,
+      "outcome": "rate_limited"
+     },
+     {
+      "job_id": "4482c918-bce0-4d12-918b-d1266f7d708d",
+      "attempt": 2,
+      "worker": "w4",
+      "start": 1.84595,
+      "end": 1.851607,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "2bd5d1bb-1b76-4a54-8436-b6c726547d4d",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 1.849352,
+      "end": 2.37665,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "b443c7c3-117d-47a1-ba0f-16808c823d03",
+      "attempt": 1,
+      "worker": "w2",
+      "start": 1.860781,
+      "end": 1.865153,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "9f5a7edf-fd9a-40d7-b8c3-fab2f87093ea",
+      "attempt": 1,
+      "worker": "w4",
+      "start": 1.861849,
+      "end": 2.393475,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "5db1743c-11d6-4ff6-99dc-0822614c0027",
+      "attempt": 1,
+      "worker": "w2",
+      "start": 1.875276,
+      "end": 2.232757,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "03f54ed8-2194-4db6-bd8b-dfe59cd97ca3",
+      "attempt": 2,
+      "worker": "w5",
+      "start": 2.173939,
+      "end": 2.717823,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "9444e945-5e26-4dd4-a826-f7af08bc22ba",
+      "attempt": 1,
+      "worker": "w2",
+      "start": 2.24476,
+      "end": 2.766217,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "2bd5d1bb-1b76-4a54-8436-b6c726547d4d",
+      "attempt": 2,
+      "worker": "w3",
+      "start": 2.384324,
+      "end": 2.408725,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "9f5a7edf-fd9a-40d7-b8c3-fab2f87093ea",
+      "attempt": 2,
+      "worker": "w4",
+      "start": 2.399119,
+      "end": 2.403818,
+      "outcome": "rate_limited"
+     },
+     {
+      "job_id": "9f5a7edf-fd9a-40d7-b8c3-fab2f87093ea",
+      "attempt": 3,
+      "worker": "w4",
+      "start": 2.408699,
+      "end": 2.413923,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "d3b1473d-31ac-47c1-a686-d65c6f0e9bc4",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 2.420088,
+      "end": 2.943955,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "ef87fdb6-ebb5-4757-b8ac-db599fd87155",
+      "attempt": 1,
+      "worker": "w4",
+      "start": 2.42439,
+      "end": 2.428716,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "79d3d6ab-99ff-4ac9-92f9-f5b681750a46",
+      "attempt": 1,
+      "worker": "w4",
+      "start": 2.437804,
+      "end": null,
+      "outcome": null
+     },
+     {
+      "job_id": "03f54ed8-2194-4db6-bd8b-dfe59cd97ca3",
+      "attempt": 3,
+      "worker": "w5",
+      "start": 2.724565,
+      "end": 2.730183,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "a938b8e5-9369-4cca-be90-f97225f3fc3d",
+      "attempt": 1,
+      "worker": "w5",
+      "start": 2.742424,
+      "end": 2.747481,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "509f6893-2bb9-408b-b2b8-df89e1c6d5df",
+      "attempt": 1,
+      "worker": "w5",
+      "start": 2.758757,
+      "end": 2.764151,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "9444e945-5e26-4dd4-a826-f7af08bc22ba",
+      "attempt": 2,
+      "worker": "w2",
+      "start": 2.773262,
+      "end": 2.778666,
+      "outcome": "server_error"
+     },
+     {
+      "job_id": "f6f0b633-98d1-4a84-9ce5-f56e2f41c6bd",
+      "attempt": 1,
+      "worker": "w5",
+      "start": 2.779498,
+      "end": 3.313471,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "9444e945-5e26-4dd4-a826-f7af08bc22ba",
+      "attempt": 3,
+      "worker": "w2",
+      "start": 2.784129,
+      "end": 3.3134,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "d3b1473d-31ac-47c1-a686-d65c6f0e9bc4",
+      "attempt": 2,
+      "worker": "w3",
+      "start": 2.950139,
+      "end": 2.95518,
+      "outcome": "server_error"
+     },
+     {
+      "job_id": "d3b1473d-31ac-47c1-a686-d65c6f0e9bc4",
+      "attempt": 3,
+      "worker": "w3",
+      "start": 2.960217,
+      "end": 2.964438,
+      "outcome": "rate_limited"
+     },
+     {
+      "job_id": "d3b1473d-31ac-47c1-a686-d65c6f0e9bc4",
+      "attempt": 4,
+      "worker": "w3",
+      "start": 2.969448,
+      "end": 2.975523,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "fa24c7fa-a673-4ada-ab40-4cf38f168629",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 2.986808,
+      "end": 2.991956,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "1dbb394d-d229-4147-8331-71a744354ede",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 3.00289,
+      "end": 3.007942,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "cda1e84d-f855-43b9-ba47-cf6511e64eb3",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 3.018812,
+      "end": 3.022673,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "7c58552e-7aab-4738-a7b2-a0b233d73a14",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 3.035851,
+      "end": 3.041144,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "afef8770-f863-4cc2-88d5-938e752e8136",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 3.05093,
+      "end": 3.573577,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "47db990a-454b-4fe9-aec4-93e1cd8fd3cb",
+      "attempt": 1,
+      "worker": "w6",
+      "start": 3.23794,
+      "end": 3.266745,
+      "outcome": "server_error"
+     },
+     {
+      "job_id": "47db990a-454b-4fe9-aec4-93e1cd8fd3cb",
+      "attempt": 2,
+      "worker": "w6",
+      "start": 3.272147,
+      "end": 3.797979,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "9444e945-5e26-4dd4-a826-f7af08bc22ba",
+      "attempt": 4,
+      "worker": "w2",
+      "start": 3.318515,
+      "end": 3.323815,
+      "outcome": "rate_limited"
+     },
+     {
+      "job_id": "f6f0b633-98d1-4a84-9ce5-f56e2f41c6bd",
+      "attempt": 2,
+      "worker": "w5",
+      "start": 3.319839,
+      "end": 3.347872,
+      "outcome": "server_error"
+     },
+     {
+      "job_id": "9444e945-5e26-4dd4-a826-f7af08bc22ba",
+      "attempt": 5,
+      "worker": "w2",
+      "start": 3.328758,
+      "end": 3.861037,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "f6f0b633-98d1-4a84-9ce5-f56e2f41c6bd",
+      "attempt": 3,
+      "worker": "w5",
+      "start": 3.354325,
+      "end": 3.718964,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "afef8770-f863-4cc2-88d5-938e752e8136",
+      "attempt": 2,
+      "worker": "w3",
+      "start": 3.582352,
+      "end": 3.608186,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "b1066f57-6f69-4ab9-afdf-73cbc9eb5aca",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 3.619964,
+      "end": 3.623772,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "05a6c92b-eac6-4ee1-9853-f14d6e05dc29",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 3.63392,
+      "end": 3.638811,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "1a092814-7f2e-4e07-8dfc-5cb71720be39",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 3.648708,
+      "end": null,
+      "outcome": null
+     },
+     {
+      "job_id": "6ebfd917-afd7-46fe-9a62-f566d234be47",
+      "attempt": 1,
+      "worker": "w5",
+      "start": 3.730682,
+      "end": 3.735405,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "6e903eeb-215a-49b7-9d98-29d0cfbec4a3",
+      "attempt": 1,
+      "worker": "w5",
+      "start": 3.749872,
+      "end": 3.754586,
+      "outcome": "bad_request"
+     },
+     {
+      "job_id": "6e903eeb-215a-49b7-9d98-29d0cfbec4a3",
+      "attempt": 2,
+      "worker": "w5",
+      "start": 3.759828,
+      "end": 3.76503,
+      "outcome": "bad_request"
+     },
+     {
+      "job_id": "6e903eeb-215a-49b7-9d98-29d0cfbec4a3",
+      "attempt": 3,
+      "worker": "w5",
+      "start": 3.769816,
+      "end": 3.773921,
+      "outcome": "bad_request"
+     },
+     {
+      "job_id": "6e903eeb-215a-49b7-9d98-29d0cfbec4a3",
       "attempt": 4,
       "worker": "w5",
-      "start": 1.975462,
-      "end": 3.015723,
-      "outcome": "timeout"
+      "start": 3.77916,
+      "end": 3.783375,
+      "outcome": "bad_request"
      },
      {
-      "job_id": "4d04f1ed-b805-4e40-8c40-d9a6f9898dc8",
-      "attempt": 1,
-      "worker": "w1",
-      "start": 1.990976,
-      "end": 2.000862,
-      "outcome": "server_error"
-     },
-     {
-      "job_id": "4d04f1ed-b805-4e40-8c40-d9a6f9898dc8",
-      "attempt": 2,
-      "worker": "w1",
-      "start": 2.012839,
-      "end": 2.607374,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "65b67fe1-54a0-434a-a663-6c9cbc1d34b0",
-      "attempt": 1,
-      "worker": "w1",
-      "start": 2.646036,
-      "end": null,
-      "outcome": null
-     },
-     {
-      "job_id": "6daea464-8067-4ca8-903a-1f6047fac6eb",
-      "attempt": 3,
-      "worker": "w2",
-      "start": 2.975686,
-      "end": 3.384724,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "1d557d3c-5299-4c72-9589-c3aaf1a93f27",
+      "job_id": "6e903eeb-215a-49b7-9d98-29d0cfbec4a3",
       "attempt": 5,
       "worker": "w5",
-      "start": 3.027676,
-      "end": 3.035752,
-      "outcome": "rate_limited"
+      "start": 3.789327,
+      "end": 3.794155,
+      "outcome": "bad_request"
      },
      {
-      "job_id": "b677b5c3-ddfc-4845-affe-f930ea568c60",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 3.056711,
-      "end": 3.294322,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "c7de9387-5f4a-43f9-957c-14abab7e8be5",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 3.319395,
-      "end": 3.328082,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "d78b4b2d-c48a-4bc2-a8be-60c1e9d6f7cb",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 3.366905,
-      "end": 3.385117,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "f45d1200-c1f5-495b-8c2e-8ad8189ecd32",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 3.640699,
-      "end": 3.6802,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "2bce68cd-0f2f-48f5-b11d-3cb34ca03e72",
-      "attempt": 1,
-      "worker": "w2",
-      "start": 3.642719,
-      "end": 3.69213,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "88c8d1a0-cdaa-4323-bde0-a2378e2bcb29",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 3.769919,
-      "end": 3.796482,
-      "outcome": "rate_limited"
-     },
-     {
-      "job_id": "1bfc69d9-241c-4cc0-b9ff-a6b1088af9e4",
-      "attempt": 1,
-      "worker": "w2",
-      "start": 3.793777,
-      "end": null,
-      "outcome": null
-     },
-     {
-      "job_id": "88c8d1a0-cdaa-4323-bde0-a2378e2bcb29",
-      "attempt": 2,
-      "worker": "w5",
-      "start": 3.864088,
-      "end": 3.89692,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "f86dfcf2-09c6-4aa3-9064-d90c8edb4f0c",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 3.972455,
-      "end": 4.001323,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "7e64b85d-92ab-42e4-ad9a-3f9e8c9ba431",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 4.068416,
-      "end": 5.114047,
-      "outcome": "timeout"
-     },
-     {
-      "job_id": "ea4cd999-cb2c-46ab-b8b9-815e8198eb45",
-      "attempt": 1,
-      "worker": "w6",
-      "start": 4.218992,
-      "end": 4.240598,
-      "outcome": "rate_limited"
-     },
-     {
-      "job_id": "ea4cd999-cb2c-46ab-b8b9-815e8198eb45",
-      "attempt": 2,
-      "worker": "w6",
-      "start": 4.25841,
-      "end": 4.268664,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "67dff411-7930-480b-8165-2dd6a2485951",
-      "attempt": 1,
-      "worker": "w6",
-      "start": 4.323628,
-      "end": 4.696407,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "a9857b91-48d3-4975-bc2d-2a2ca9723f00",
-      "attempt": 1,
-      "worker": "w6",
-      "start": 4.761952,
-      "end": 5.484637,
-      "outcome": "timeout"
-     },
-     {
-      "job_id": "a9857b91-48d3-4975-bc2d-2a2ca9723f00",
+      "job_id": "47db990a-454b-4fe9-aec4-93e1cd8fd3cb",
       "attempt": 3,
       "worker": "w6",
-      "start": 5.077885,
-      "end": 6.152389,
-      "outcome": "timeout"
+      "start": 3.803857,
+      "end": 3.809274,
+      "outcome": "ok"
      },
      {
-      "job_id": "7e64b85d-92ab-42e4-ad9a-3f9e8c9ba431",
+      "job_id": "5bfd4d76-ab7d-4082-936f-0c9a30af5483",
+      "attempt": 1,
+      "worker": "w5",
+      "start": 3.807526,
+      "end": 3.812291,
+      "outcome": "bad_request"
+     },
+     {
+      "job_id": "5bfd4d76-ab7d-4082-936f-0c9a30af5483",
       "attempt": 2,
       "worker": "w5",
-      "start": 5.138146,
-      "end": 5.371479,
+      "start": 3.818947,
+      "end": 3.823923,
+      "outcome": "bad_request"
+     },
+     {
+      "job_id": "2b343347-57b8-492d-9362-0ca13404da7c",
+      "attempt": 1,
+      "worker": "w6",
+      "start": 3.821102,
+      "end": 3.825961,
+      "outcome": "bad_request"
+     },
+     {
+      "job_id": "5bfd4d76-ab7d-4082-936f-0c9a30af5483",
+      "attempt": 3,
+      "worker": "w5",
+      "start": 3.830308,
+      "end": 3.834832,
+      "outcome": "bad_request"
+     },
+     {
+      "job_id": "2b343347-57b8-492d-9362-0ca13404da7c",
+      "attempt": 2,
+      "worker": "w6",
+      "start": 3.831843,
+      "end": 3.836322,
+      "outcome": "bad_request"
+     },
+     {
+      "job_id": "5bfd4d76-ab7d-4082-936f-0c9a30af5483",
+      "attempt": 4,
+      "worker": "w5",
+      "start": 3.839846,
+      "end": 3.844162,
+      "outcome": "bad_request"
+     },
+     {
+      "job_id": "2b343347-57b8-492d-9362-0ca13404da7c",
+      "attempt": 3,
+      "worker": "w6",
+      "start": 3.844596,
+      "end": 3.849794,
+      "outcome": "bad_request"
+     },
+     {
+      "job_id": "5bfd4d76-ab7d-4082-936f-0c9a30af5483",
+      "attempt": 5,
+      "worker": "w5",
+      "start": 3.849091,
+      "end": 3.853827,
+      "outcome": "bad_request"
+     },
+     {
+      "job_id": "2b343347-57b8-492d-9362-0ca13404da7c",
+      "attempt": 4,
+      "worker": "w6",
+      "start": 3.856299,
+      "end": 3.861878,
+      "outcome": "bad_request"
+     },
+     {
+      "job_id": "2b343347-57b8-492d-9362-0ca13404da7c",
+      "attempt": 5,
+      "worker": "w6",
+      "start": 3.867852,
+      "end": 3.872472,
+      "outcome": "bad_request"
+     },
+     {
+      "job_id": "6fec0fd8-8b78-4729-837b-59bc3a522d06",
+      "attempt": 1,
+      "worker": "w5",
+      "start": 3.867854,
+      "end": 3.874205,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "290bc3cb-6503-4047-903c-fd439e4b5d68",
+      "attempt": 1,
+      "worker": "w2",
+      "start": 3.872344,
+      "end": 3.880031,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "76c932b9-2365-47dc-b8e7-fda0b9bb5c81",
+      "attempt": 1,
+      "worker": "w6",
+      "start": 3.887025,
+      "end": 4.414761,
       "outcome": "timeout"
      },
      {
-      "job_id": "a7b7a2f9-5f38-4b0f-a824-630308cca07d",
+      "job_id": "3fc43c40-e3a8-40da-a052-4087c1565360",
+      "attempt": 1,
+      "worker": "w5",
+      "start": 3.888389,
+      "end": 3.892756,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "382b5b3e-a817-4b14-a83e-8f8435a527dc",
+      "attempt": 1,
+      "worker": "w2",
+      "start": 3.89303,
+      "end": 4.41476,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "a4041b61-917f-47b8-9b7b-152d1094a9e9",
+      "attempt": 1,
+      "worker": "w5",
+      "start": 3.903172,
+      "end": 4.430546,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "27e09ecf-2897-4e59-9f9a-000b93e07f5b",
       "attempt": 1,
       "worker": "w7",
-      "start": 5.245654,
+      "start": 4.419977,
+      "end": 4.4281,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "382b5b3e-a817-4b14-a83e-8f8435a527dc",
+      "attempt": 2,
+      "worker": "w2",
+      "start": 4.421182,
+      "end": 4.426143,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "76c932b9-2365-47dc-b8e7-fda0b9bb5c81",
+      "attempt": 2,
+      "worker": "w6",
+      "start": 4.421216,
+      "end": 4.42673,
+      "outcome": "rate_limited"
+     },
+     {
+      "job_id": "76c932b9-2365-47dc-b8e7-fda0b9bb5c81",
+      "attempt": 3,
+      "worker": "w6",
+      "start": 4.433269,
+      "end": 4.438072,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "a4041b61-917f-47b8-9b7b-152d1094a9e9",
+      "attempt": 2,
+      "worker": "w5",
+      "start": 4.435844,
+      "end": 4.440812,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "6ef53856-6c26-4b36-894b-16520fee7087",
+      "attempt": 1,
+      "worker": "w2",
+      "start": 4.438571,
+      "end": 4.443039,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "5adbd3e5-20be-4e38-b0d6-894d2b81502a",
+      "attempt": 1,
+      "worker": "w7",
+      "start": 4.440225,
       "end": null,
       "outcome": null
      },
      {
-      "job_id": "7e64b85d-92ab-42e4-ad9a-3f9e8c9ba431",
-      "attempt": 3,
+      "job_id": "41e23d0b-8e57-4d97-b8f6-c2286503f44c",
+      "attempt": 1,
+      "worker": "w6",
+      "start": 4.448319,
+      "end": 4.452155,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "aeb435d7-52ca-4426-80b5-dc5891360762",
+      "attempt": 1,
       "worker": "w5",
-      "start": 5.482547,
-      "end": 5.506226,
+      "start": 4.451713,
+      "end": 4.455928,
       "outcome": "server_error"
      },
      {
-      "job_id": "a9857b91-48d3-4975-bc2d-2a2ca9723f00",
-      "attempt": 2,
-      "worker": "w6",
-      "start": 5.520144,
-      "end": 5.540333,
-      "outcome": "server_error"
-     },
-     {
-      "job_id": "7e64b85d-92ab-42e4-ad9a-3f9e8c9ba431",
-      "attempt": 4,
-      "worker": "w5",
-      "start": 5.538027,
-      "end": 5.572319,
-      "outcome": "rate_limited"
-     },
-     {
-      "job_id": "361fe376-1bb1-410a-9c92-8fa98382112d",
+      "job_id": "bd238b8b-b21a-4a48-b1f9-fc9a586e3e45",
       "attempt": 1,
-      "worker": "w7",
-      "start": 5.582143,
-      "end": 5.096091,
+      "worker": "w2",
+      "start": 4.451717,
+      "end": 4.455971,
       "outcome": "ok"
      },
      {
-      "job_id": "7e64b85d-92ab-42e4-ad9a-3f9e8c9ba431",
-      "attempt": 5,
-      "worker": "w5",
-      "start": 5.603432,
-      "end": 5.623913,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "45373c48-d89d-4b2c-8f11-e40a615d8441",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 5.736262,
-      "end": 5.755536,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "b4c41295-61ed-4582-a7a7-53a99e0d378b",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 5.968585,
-      "end": 6.004998,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "7bdb847d-87e0-4f2d-a1f5-3207c1ca8a82",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 6.080285,
-      "end": 6.67224,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "a9857b91-48d3-4975-bc2d-2a2ca9723f00",
-      "attempt": 4,
-      "worker": "w6",
-      "start": 6.176344,
-      "end": 6.187868,
-      "outcome": "rate_limited"
-     },
-     {
-      "job_id": "a9857b91-48d3-4975-bc2d-2a2ca9723f00",
-      "attempt": 5,
-      "worker": "w6",
-      "start": 6.216694,
-      "end": 7.258939,
-      "outcome": "timeout"
-     },
-     {
-      "job_id": "07132bd7-d7f2-4bf9-9409-fb9ec868f608",
-      "attempt": 1,
-      "worker": "w8",
-      "start": 6.686535,
-      "end": 6.72146,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "325037ec-2380-4559-888b-b7a29d065a01",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 6.717053,
-      "end": 6.729177,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "80b594b1-9ac3-409f-ba88-973a15d40921",
-      "attempt": 1,
-      "worker": "w8",
-      "start": 6.74967,
-      "end": 6.761692,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "14f8a43d-5fca-4f5b-8305-1709c5eeb153",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 6.754214,
-      "end": 6.765288,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "30d41693-2c16-4909-a362-ce32bec02ae1",
-      "attempt": 1,
-      "worker": "w8",
-      "start": 6.787915,
-      "end": 6.803424,
-      "outcome": "server_error"
-     },
-     {
-      "job_id": "d8722f9f-60f5-4e1f-8d38-79e8a5d88a20",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 6.794201,
-      "end": 7.842101,
-      "outcome": "timeout"
-     },
-     {
-      "job_id": "30d41693-2c16-4909-a362-ce32bec02ae1",
-      "attempt": 2,
-      "worker": "w8",
-      "start": 6.817635,
-      "end": 7.85785,
-      "outcome": "timeout"
-     },
-     {
-      "job_id": "8f25e4cb-aea6-4e57-ba0b-87fcd414c94c",
-      "attempt": 1,
-      "worker": "w6",
-      "start": 7.310566,
-      "end": 7.318883,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "fdc3cbe2-d81d-43b8-82f3-97d0db51fad6",
-      "attempt": 1,
-      "worker": "w6",
-      "start": 7.344428,
-      "end": 7.354265,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "386ffbe9-71b8-481b-ac3d-82f44cc00899",
-      "attempt": 1,
-      "worker": "w6",
-      "start": 7.385116,
-      "end": 7.791319,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "b9564a38-c5bc-406c-87b1-aecc22b1ff80",
-      "attempt": 1,
-      "worker": "w9",
-      "start": 7.829185,
-      "end": 7.844274,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "ac8ccefc-4169-4910-9431-6acbcd1bbb34",
-      "attempt": 1,
-      "worker": "w6",
-      "start": 7.830483,
-      "end": 7.859566,
-      "outcome": "bad_request"
-     },
-     {
-      "job_id": "d8722f9f-60f5-4e1f-8d38-79e8a5d88a20",
+      "job_id": "aeb435d7-52ca-4426-80b5-dc5891360762",
       "attempt": 2,
       "worker": "w5",
-      "start": 7.866925,
-      "end": 7.876907,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "30d41693-2c16-4909-a362-ce32bec02ae1",
-      "attempt": 3,
-      "worker": "w8",
-      "start": 7.869362,
-      "end": 7.881292,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "ac8ccefc-4169-4910-9431-6acbcd1bbb34",
-      "attempt": 2,
-      "worker": "w6",
-      "start": 7.870519,
-      "end": 7.882992,
-      "outcome": "bad_request"
-     },
-     {
-      "job_id": "f464061f-94c1-4288-a5b3-dedf6a1c493e",
-      "attempt": 1,
-      "worker": "w9",
-      "start": 7.881254,
-      "end": 7.891376,
-      "outcome": "bad_request"
-     },
-     {
-      "job_id": "ac8ccefc-4169-4910-9431-6acbcd1bbb34",
-      "attempt": 3,
-      "worker": "w6",
-      "start": 7.89717,
-      "end": 7.914115,
-      "outcome": "bad_request"
-     },
-     {
-      "job_id": "c617c4ab-7d20-4428-8a86-77e1d76bd626",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 7.900971,
-      "end": 7.920101,
-      "outcome": "bad_request"
-     },
-     {
-      "job_id": "f464061f-94c1-4288-a5b3-dedf6a1c493e",
-      "attempt": 2,
-      "worker": "w9",
-      "start": 7.912403,
-      "end": 7.922184,
-      "outcome": "bad_request"
-     },
-     {
-      "job_id": "c44c5e91-6c0a-4102-a269-97c9cb79940f",
-      "attempt": 1,
-      "worker": "w8",
-      "start": 7.917902,
-      "end": 7.930126,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "ac8ccefc-4169-4910-9431-6acbcd1bbb34",
-      "attempt": 4,
-      "worker": "w6",
-      "start": 7.928686,
-      "end": 7.937831,
-      "outcome": "bad_request"
-     },
-     {
-      "job_id": "f464061f-94c1-4288-a5b3-dedf6a1c493e",
-      "attempt": 3,
-      "worker": "w9",
-      "start": 7.937608,
-      "end": 7.949053,
-      "outcome": "bad_request"
-     },
-     {
-      "job_id": "c617c4ab-7d20-4428-8a86-77e1d76bd626",
-      "attempt": 2,
-      "worker": "w5",
-      "start": 7.937618,
-      "end": 7.949026,
-      "outcome": "bad_request"
-     },
-     {
-      "job_id": "ac8ccefc-4169-4910-9431-6acbcd1bbb34",
-      "attempt": 5,
-      "worker": "w6",
-      "start": 7.953089,
-      "end": 7.960445,
-      "outcome": "bad_request"
-     },
-     {
-      "job_id": "7c993947-f719-4506-ab01-d5b3d3d62fb8",
-      "attempt": 1,
-      "worker": "w8",
-      "start": 7.955249,
-      "end": 9.005614,
-      "outcome": "timeout"
-     },
-     {
-      "job_id": "c617c4ab-7d20-4428-8a86-77e1d76bd626",
-      "attempt": 3,
-      "worker": "w5",
-      "start": 7.960261,
-      "end": 7.976289,
-      "outcome": "bad_request"
-     },
-     {
-      "job_id": "f464061f-94c1-4288-a5b3-dedf6a1c493e",
-      "attempt": 4,
-      "worker": "w9",
-      "start": 7.960814,
-      "end": 7.981058,
-      "outcome": "bad_request"
-     },
-     {
-      "job_id": "499a6a7e-424d-4f02-8454-f66ab7c6cacc",
-      "attempt": 1,
-      "worker": "w6",
-      "start": 7.987468,
-      "end": 8.001829,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "c617c4ab-7d20-4428-8a86-77e1d76bd626",
-      "attempt": 4,
-      "worker": "w5",
-      "start": 7.987983,
-      "end": 7.99997,
-      "outcome": "bad_request"
-     },
-     {
-      "job_id": "f464061f-94c1-4288-a5b3-dedf6a1c493e",
-      "attempt": 5,
-      "worker": "w9",
-      "start": 7.992878,
-      "end": 8.066151,
-      "outcome": "bad_request"
-     },
-     {
-      "job_id": "c617c4ab-7d20-4428-8a86-77e1d76bd626",
-      "attempt": 5,
-      "worker": "w5",
-      "start": 8.0701,
-      "end": 8.083137,
-      "outcome": "bad_request"
-     },
-     {
-      "job_id": "d34238d8-b533-46ab-8391-464324b5dc56",
-      "attempt": 1,
-      "worker": "w6",
-      "start": 8.090364,
-      "end": 8.101092,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "e1c67b4b-634a-4925-b6c2-00b0cffd15f0",
-      "attempt": 1,
-      "worker": "w9",
-      "start": 8.103567,
-      "end": 9.155584,
-      "outcome": "timeout"
-     },
-     {
-      "job_id": "d949d823-498b-40f1-a924-6439b0efa963",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 8.110216,
-      "end": 8.716713,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "c52e6792-5bf8-4c77-b33b-280b09883392",
-      "attempt": 1,
-      "worker": "w6",
-      "start": 8.123387,
-      "end": 8.130909,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "406bba7c-f1a8-4962-afd2-36820bcddbc1",
-      "attempt": 1,
-      "worker": "w6",
-      "start": 8.16145,
-      "end": 8.169503,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "27fcd456-570f-4c66-8f29-e2c99a3f77a2",
-      "attempt": 1,
-      "worker": "w6",
-      "start": 8.185197,
-      "end": 8.191905,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "32a953a8-7e4a-45ba-942f-b3a37f8480f8",
-      "attempt": 1,
-      "worker": "w6",
-      "start": 8.206412,
-      "end": 8.212669,
-      "outcome": "server_error"
-     },
-     {
-      "job_id": "32a953a8-7e4a-45ba-942f-b3a37f8480f8",
-      "attempt": 2,
-      "worker": "w6",
-      "start": 8.220569,
-      "end": 8.227231,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "9c2af4be-562f-4f39-a4bc-1cadaeac5e92",
-      "attempt": 1,
-      "worker": "w6",
-      "start": 8.24438,
-      "end": 8.663104,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "5199945f-b914-44c7-bfa8-dc3e1d5b7041",
-      "attempt": 1,
-      "worker": "w6",
-      "start": 8.679168,
-      "end": 8.689135,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "7c993947-f719-4506-ab01-d5b3d3d62fb8",
-      "attempt": 2,
-      "worker": "w8",
-      "start": 9.018645,
-      "end": 9.02844,
-      "outcome": "rate_limited"
-     },
-     {
-      "job_id": "7c993947-f719-4506-ab01-d5b3d3d62fb8",
-      "attempt": 3,
-      "worker": "w8",
-      "start": 9.038927,
-      "end": 9.064537,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "e1c67b4b-634a-4925-b6c2-00b0cffd15f0",
-      "attempt": 2,
-      "worker": "w9",
-      "start": 9.163163,
-      "end": 9.169996,
+      "start": 4.460759,
+      "end": 4.464619,
       "outcome": "ok"
      }
     ]
    },
    "log": [
     [
-     1.7,
-     "== NAIVE mode: fake provider on :49999 (seed 42), cap $0.0420, 40 requests"
+     1.23,
+     "== NAIVE mode: fake provider on :59953 (seed 42), cap $0.0420, 40 requests"
     ],
     [
-     1.95,
+     1.82,
      "client sent 66 POSTs for 40 requests -> 66x HTTP 201"
     ],
     [
-     3.93,
-     "w3 started (naive: no lease, no idempotency key, no budget check)"
-    ],
-    [
-     3.98,
-     "w3 job d2e49844 attempt 1: bad_request, retrying now"
-    ],
-    [
-     3.99,
-     "KILL w3 (kill -9) while job d2e49844 attempt 1 is in flight"
-    ],
-    [
-     3.99,
+     2.93,
      "w1 started (naive: no lease, no idempotency key, no budget check)"
     ],
     [
-     4.01,
+     2.97,
      "w2 started (naive: no lease, no idempotency key, no budget check)"
     ],
     [
-     4.01,
-     "spawn w5"
+     2.97,
+     "w3 started (naive: no lease, no idempotency key, no budget check)"
     ],
     [
-     4.06,
-     "w1 job 24dd921e attempt 1: ok"
+     2.97,
+     "w1 job 24dce07c attempt 1: ok"
     ],
     [
-     4.07,
-     "w2 job 3194a373 attempt 1: ok"
-    ],
-    [
-     4.07,
+     2.98,
      "w4 started (naive: no lease, no idempotency key, no budget check)"
     ],
     [
-     4.12,
-     "w4 job 0cb70908 attempt 1: rate_limited, retrying now"
+     2.99,
+     "w1 job d9996909 attempt 1: ok"
     ],
     [
-     4.16,
-     "w4 job 0cb70908 attempt 2: ok"
+     3.01,
+     "w4 job 58468dd1 attempt 1: rate_limited, retrying now"
+    ],
+    [
+     3.02,
+     "w3 job 2157b8ed attempt 1: bad_request, retrying now"
+    ],
+    [
+     3.02,
+     "w4 job 58468dd1 attempt 2: ok"
+    ],
+    [
+     3.03,
+     "w3 job 2157b8ed attempt 2: bad_request, retrying now"
+    ],
+    [
+     3.04,
+     "w3 job 2157b8ed attempt 3: bad_request, retrying now"
+    ],
+    [
+     3.04,
+     "w3 job 2157b8ed attempt 4: bad_request, retrying now"
+    ],
+    [
+     3.05,
+     "w3 job 2157b8ed attempt 5: bad_request, retrying now"
+    ],
+    [
+     3.06,
+     "w3 job 2157b8ed: failed after 5 tries"
+    ],
+    [
+     3.07,
+     "w3 job ba5c2ae2 attempt 1: ok"
+    ],
+    [
+     3.09,
+     "w3 job 9ff3c9b6 attempt 1: ok"
+    ],
+    [
+     3.1,
+     "w3 job 169b3e50 attempt 1: ok"
+    ],
+    [
+     3.11,
+     "w3 job 44b1e61d attempt 1: ok"
+    ],
+    [
+     3.13,
+     "w3 job 1d45306c attempt 1: ok"
+    ],
+    [
+     3.14,
+     "w3 job 912834b5 attempt 1: ok"
+    ],
+    [
+     3.15,
+     "w3 job 1065683f attempt 1: rate_limited, retrying now"
+    ],
+    [
+     3.21,
+     "w2 job 07b09126 attempt 1: ok"
+    ],
+    [
+     3.5,
+     "w1 job cac59c4c attempt 1: timeout, retrying now"
+    ],
+    [
+     3.54,
+     "w1 job cac59c4c attempt 2: ok"
+    ],
+    [
+     3.55,
+     "w4 job af837801 attempt 1: timeout, retrying now"
+    ],
+    [
+     3.55,
+     "w1 job 50ff1ed7 attempt 1: ok"
+    ],
+    [
+     3.67,
+     "w3 job 1065683f attempt 2: timeout, retrying now"
+    ],
+    [
+     3.69,
+     "w3 job 1065683f attempt 3: ok"
+    ],
+    [
+     3.7,
+     "w3 job 9efa12ce attempt 1: ok"
+    ],
+    [
+     3.71,
+     "w3 job ac215ed5 attempt 1: rate_limited, retrying now"
+    ],
+    [
+     3.72,
+     "w2 job 19c11986 attempt 1: timeout, retrying now"
+    ],
+    [
+     3.72,
+     "w3 job ac215ed5 attempt 2: rate_limited, retrying now"
+    ],
+    [
+     3.73,
+     "w3 job ac215ed5 attempt 3: rate_limited, retrying now"
+    ],
+    [
+     3.74,
+     "KILL w1 (kill -9) while job 9db1885a attempt 1 is in flight"
+    ],
+    [
+     3.75,
+     "spawn w5"
+    ],
+    [
+     3.76,
+     "w2 job 19c11986 attempt 2: ok"
+    ],
+    [
+     3.77,
+     "w2 job 1d56f9df attempt 1: ok"
+    ],
+    [
+     3.79,
+     "w2 job 2788b856 attempt 1: server_error, retrying now"
+    ],
+    [
+     3.8,
+     "w2 job 2788b856 attempt 2: rate_limited, retrying now"
+    ],
+    [
+     3.93,
+     "w4 job af837801 attempt 2: ok"
+    ],
+    [
+     3.95,
+     "w4 job 0d9af6c4 attempt 1: ok"
+    ],
+    [
+     3.96,
+     "w4 job 81aa4ae9 attempt 1: server_error, retrying now"
+    ],
+    [
+     4.25,
+     "w3 job ac215ed5 attempt 4: timeout, retrying now"
     ],
     [
      4.31,
-     "w1 job b172e818 attempt 1: ok"
+     "w2 job 2788b856 attempt 3: timeout, retrying now"
     ],
     [
-     4.33,
-     "w1 job db44ffcd attempt 1: ok"
-    ],
-    [
-     4.36,
-     "w1 job 7cfdf9bf attempt 1: ok"
-    ],
-    [
-     4.38,
-     "w1 job f7cdd802 attempt 1: ok"
-    ],
-    [
-     4.41,
-     "w1 job 1cc13a18 attempt 1: ok"
-    ],
-    [
-     4.43,
-     "w1 job 7c664a7c attempt 1: ok"
-    ],
-    [
-     4.47,
-     "w1 job 6967eda6 attempt 1: ok"
+     4.35,
+     "w2 job 2788b856 attempt 4: rate_limited, retrying now"
     ],
     [
      4.49,
-     "w1 job a850503f attempt 1: rate_limited, retrying now"
+     "w4 job 81aa4ae9 attempt 2: timeout, retrying now"
     ],
     [
-     4.7,
-     "w2 job e8094cfa attempt 1: ok"
+     4.5,
+     "w4 job 81aa4ae9 attempt 3: ok"
     ],
     [
-     4.78,
-     "w4 job de764b64 attempt 1: ok"
-    ],
-    [
-     5.54,
-     "w1 job a850503f attempt 2: timeout, retrying now"
-    ],
-    [
-     5.69,
-     "w1 job a850503f attempt 3: ok"
-    ],
-    [
-     5.7,
-     "KILL w4 (kill -9) while job c05556fb attempt 1 is in flight"
-    ],
-    [
-     5.72,
-     "spawn w6"
-    ],
-    [
-     5.74,
-     "w2 job 9c2d8563 attempt 1: timeout, retrying now"
-    ],
-    [
-     5.76,
-     "w1 job 7b6547dd attempt 1: ok"
-    ],
-    [
-     5.79,
-     "w2 job 9c2d8563 attempt 2: ok"
-    ],
-    [
-     5.79,
+     4.52,
      "w5 started (naive: no lease, no idempotency key, no budget check)"
     ],
     [
-     5.8,
-     "w1 job c10a47a1 attempt 1: ok"
+     4.68,
+     "w3 job ac215ed5 attempt 5: ok"
+    ],
+    [
+     4.69,
+     "w3 job 45899743 attempt 1: ok"
+    ],
+    [
+     4.71,
+     "w3 job f8ae573d attempt 1: ok"
+    ],
+    [
+     4.72,
+     "w3 job bb0c62f8 attempt 1: ok"
+    ],
+    [
+     4.72,
+     "w4 job 6e04417a attempt 1: ok"
+    ],
+    [
+     4.74,
+     "w4 job 4482c918 attempt 1: rate_limited, retrying now"
+    ],
+    [
+     4.74,
+     "w3 job f1dfad53 attempt 1: ok"
+    ],
+    [
+     4.75,
+     "w2 job 2788b856 attempt 5: ok"
+    ],
+    [
+     4.75,
+     "w4 job 4482c918 attempt 2: ok"
+    ],
+    [
+     4.76,
+     "w2 job b443c7c3 attempt 1: ok"
+    ],
+    [
+     5.05,
+     "w5 job 03f54ed8 attempt 1: timeout, retrying now"
+    ],
+    [
+     5.12,
+     "w2 job 5db1743c attempt 1: ok"
+    ],
+    [
+     5.26,
+     "w3 job 2bd5d1bb attempt 1: timeout, retrying now"
+    ],
+    [
+     5.27,
+     "w4 job 9f5a7edf attempt 1: timeout, retrying now"
+    ],
+    [
+     5.28,
+     "w4 job 9f5a7edf attempt 2: rate_limited, retrying now"
+    ],
+    [
+     5.29,
+     "w3 job 2bd5d1bb attempt 2: ok"
+    ],
+    [
+     5.29,
+     "w4 job 9f5a7edf attempt 3: ok"
+    ],
+    [
+     5.31,
+     "w4 job ef87fdb6 attempt 1: ok"
+    ],
+    [
+     5.37,
+     "KILL w4 (kill -9) while job 79d3d6ab attempt 1 is in flight"
+    ],
+    [
+     5.38,
+     "spawn w6"
+    ],
+    [
+     5.59,
+     "w5 job 03f54ed8 attempt 2: timeout, retrying now"
+    ],
+    [
+     5.6,
+     "w5 job 03f54ed8 attempt 3: ok"
+    ],
+    [
+     5.62,
+     "w5 job a938b8e5 attempt 1: ok"
+    ],
+    [
+     5.63,
+     "w2 job 9444e945 attempt 1: timeout, retrying now"
+    ],
+    [
+     5.64,
+     "w5 job 509f6893 attempt 1: ok"
+    ],
+    [
+     5.65,
+     "w2 job 9444e945 attempt 2: server_error, retrying now"
+    ],
+    [
+     5.81,
+     "w3 job d3b1473d attempt 1: timeout, retrying now"
     ],
     [
      5.82,
-     "w2 job 6daea464 attempt 1: rate_limited, retrying now"
+     "w3 job d3b1473d attempt 2: server_error, retrying now"
     ],
     [
      5.83,
-     "w1 job 872d0cd0 attempt 1: rate_limited, retrying now"
+     "w3 job d3b1473d attempt 3: rate_limited, retrying now"
     ],
     [
      5.84,
-     "w5 job 1d557d3c attempt 1: rate_limited, retrying now"
-    ],
-    [
-     5.85,
-     "w1 job 872d0cd0 attempt 2: ok"
+     "w3 job d3b1473d attempt 4: ok"
     ],
     [
      5.86,
-     "w5 job 1d557d3c attempt 2: server_error, retrying now"
+     "w3 job fa24c7fa attempt 1: ok"
     ],
     [
-     5.88,
-     "w5 job 1d557d3c attempt 3: rate_limited, retrying now"
+     5.87,
+     "w3 job 1dbb394d attempt 1: ok"
     ],
     [
-     5.88,
-     "w1 job 9d9ccc37 attempt 1: ok"
+     5.89,
+     "w3 job cda1e84d attempt 1: ok"
     ],
     [
-     5.91,
-     "w1 job 4d04f1ed attempt 1: server_error, retrying now"
+     5.9,
+     "w3 job 7c58552e attempt 1: ok"
     ],
     [
-     6.52,
-     "w1 job 4d04f1ed attempt 2: ok"
-    ],
-    [
-     6.85,
-     "KILL w1 (kill -9) while job 65b67fe1 attempt 1 is in flight"
-    ],
-    [
-     6.85,
-     "w2 job 6daea464 attempt 2: timeout, retrying now"
-    ],
-    [
-     6.87,
-     "spawn w7"
-    ],
-    [
-     6.9,
-     "w5 job 1d557d3c attempt 4: timeout, retrying now"
-    ],
-    [
-     6.91,
-     "w5 job 1d557d3c attempt 5: rate_limited, retrying now"
-    ],
-    [
-     6.92,
-     "w5 job 1d557d3c: failed after 5 tries"
-    ],
-    [
-     7.17,
-     "w5 job b677b5c3 attempt 1: ok"
-    ],
-    [
-     7.22,
-     "w5 job c7de9387 attempt 1: ok"
-    ],
-    [
-     7.31,
-     "w5 job d78b4b2d attempt 1: ok"
-    ],
-    [
-     7.31,
-     "w2 job 6daea464 attempt 3: ok"
-    ],
-    [
-     7.56,
-     "w5 job f45d1200 attempt 1: ok"
-    ],
-    [
-     7.57,
-     "w2 job 2bce68cd attempt 1: ok"
-    ],
-    [
-     7.67,
-     "w5 job 88c8d1a0 attempt 1: rate_limited, retrying now"
-    ],
-    [
-     7.77,
-     "w5 job 88c8d1a0 attempt 2: ok"
-    ],
-    [
-     7.88,
-     "w5 job f86dfcf2 attempt 1: ok"
-    ],
-    [
-     8.0,
+     6.08,
      "w6 started (naive: no lease, no idempotency key, no budget check)"
     ],
     [
-     8.09,
-     "w6 job ea4cd999 attempt 1: rate_limited, retrying now"
+     6.12,
+     "w6 job 47db990a attempt 1: server_error, retrying now"
     ],
     [
-     8.12,
-     "w6 job ea4cd999 attempt 2: ok"
+     6.16,
+     "w2 job 9444e945 attempt 3: timeout, retrying now"
     ],
     [
-     8.39,
-     "KILL w2 (kill -9) while job 1bfc69d9 attempt 1 is in flight"
+     6.16,
+     "w5 job f6f0b633 attempt 1: timeout, retrying now"
     ],
     [
-     8.41,
-     "spawn w8"
+     6.17,
+     "w2 job 9444e945 attempt 4: rate_limited, retrying now"
     ],
     [
-     8.56,
-     "w6 job 67dff411 attempt 1: ok"
+     6.2,
+     "w5 job f6f0b633 attempt 2: server_error, retrying now"
     ],
     [
-     8.94,
-     "w5 job 7e64b85d attempt 1: timeout, retrying now"
+     6.42,
+     "w3 job afef8770 attempt 1: timeout, retrying now"
     ],
     [
-     9.63,
-     "w6 job a9857b91 attempt 1: timeout, retrying now"
+     6.45,
+     "w3 job afef8770 attempt 2: ok"
     ],
     [
-     9.67,
+     6.47,
+     "w3 job b1066f57 attempt 1: ok"
+    ],
+    [
+     6.48,
+     "w3 job 05a6c92b attempt 1: ok"
+    ],
+    [
+     6.53,
+     "KILL w3 (kill -9) while job 1a092814 attempt 1 is in flight"
+    ],
+    [
+     6.54,
+     "spawn w7"
+    ],
+    [
+     6.56,
+     "w5 job f6f0b633 attempt 3: ok"
+    ],
+    [
+     6.58,
+     "w5 job 6ebfd917 attempt 1: ok"
+    ],
+    [
+     6.59,
+     "w5 job 6e903eeb attempt 1: bad_request, retrying now"
+    ],
+    [
+     6.6,
+     "w5 job 6e903eeb attempt 2: bad_request, retrying now"
+    ],
+    [
+     6.61,
+     "w5 job 6e903eeb attempt 3: bad_request, retrying now"
+    ],
+    [
+     6.62,
+     "w5 job 6e903eeb attempt 4: bad_request, retrying now"
+    ],
+    [
+     6.63,
+     "w5 job 6e903eeb attempt 5: bad_request, retrying now"
+    ],
+    [
+     6.63,
+     "w6 job 47db990a attempt 2: timeout, retrying now"
+    ],
+    [
+     6.63,
+     "w5 job 6e903eeb: failed after 5 tries"
+    ],
+    [
+     6.65,
+     "w6 job 47db990a attempt 3: ok"
+    ],
+    [
+     6.65,
+     "w5 job 5bfd4d76 attempt 1: bad_request, retrying now"
+    ],
+    [
+     6.66,
+     "w5 job 5bfd4d76 attempt 2: bad_request, retrying now"
+    ],
+    [
+     6.66,
+     "w6 job 2b343347 attempt 1: bad_request, retrying now"
+    ],
+    [
+     6.67,
+     "w5 job 5bfd4d76 attempt 3: bad_request, retrying now"
+    ],
+    [
+     6.67,
+     "w6 job 2b343347 attempt 2: bad_request, retrying now"
+    ],
+    [
+     6.68,
+     "w5 job 5bfd4d76 attempt 4: bad_request, retrying now"
+    ],
+    [
+     6.68,
+     "w6 job 2b343347 attempt 3: bad_request, retrying now"
+    ],
+    [
+     6.69,
+     "w5 job 5bfd4d76 attempt 5: bad_request, retrying now"
+    ],
+    [
+     6.69,
+     "w5 job 5bfd4d76: failed after 5 tries"
+    ],
+    [
+     6.69,
+     "w2 job 9444e945 attempt 5: timeout, retrying now"
+    ],
+    [
+     6.7,
+     "w6 job 2b343347 attempt 4: bad_request, retrying now"
+    ],
+    [
+     6.7,
+     "w2 job 9444e945: failed after 5 tries"
+    ],
+    [
+     6.71,
+     "w6 job 2b343347 attempt 5: bad_request, retrying now"
+    ],
+    [
+     6.71,
+     "w6 job 2b343347: failed after 5 tries"
+    ],
+    [
+     6.71,
+     "w5 job 6fec0fd8 attempt 1: ok"
+    ],
+    [
+     6.72,
+     "w2 job 290bc3cb attempt 1: ok"
+    ],
+    [
+     6.73,
+     "w5 job 3fc43c40 attempt 1: ok"
+    ],
+    [
+     7.22,
      "w7 started (naive: no lease, no idempotency key, no budget check)"
     ],
     [
-     9.69,
-     "w6 job a9857b91 attempt 2: server_error, retrying now"
+     7.23,
+     "w2 job 382b5b3e attempt 1: timeout, retrying now"
     ],
     [
-     9.84,
-     "w7 job 361fe376 attempt 1: ok"
+     7.23,
+     "w6 job 76c932b9 attempt 1: timeout, retrying now"
     ],
     [
-     10.07,
-     "w5 job 7e64b85d attempt 2: timeout, retrying now"
+     7.24,
+     "w6 job 76c932b9 attempt 2: rate_limited, retrying now"
     ],
     [
-     10.16,
-     "w5 job 7e64b85d attempt 3: server_error, retrying now"
+     7.25,
+     "w2 job 382b5b3e attempt 2: ok"
     ],
     [
-     10.18,
-     "KILL w7 (kill -9) while job a7b7a2f9 attempt 1 is in flight"
+     7.25,
+     "w5 job a4041b61 attempt 1: timeout, retrying now"
     ],
     [
-     10.21,
-     "spawn w9"
+     7.25,
+     "w7 job 27e09ecf attempt 1: ok"
     ],
     [
-     10.22,
-     "w5 job 7e64b85d attempt 4: rate_limited, retrying now"
+     7.26,
+     "w6 job 76c932b9 attempt 3: ok"
     ],
     [
-     10.33,
-     "w5 job 7e64b85d attempt 5: ok"
+     7.26,
+     "w5 job a4041b61 attempt 2: ok"
     ],
     [
-     10.57,
-     "w5 job 45373c48 attempt 1: ok"
+     7.26,
+     "w2 job 6ef53856 attempt 1: ok"
     ],
     [
-     10.66,
-     "w5 job b4c41295 attempt 1: ok"
+     7.27,
+     "w6 job 41e23d0b attempt 1: ok"
     ],
     [
-     10.78,
-     "w6 job a9857b91 attempt 3: timeout, retrying now"
+     7.27,
+     "w5 job aeb435d7 attempt 1: server_error, retrying now"
     ],
     [
-     10.82,
-     "w6 job a9857b91 attempt 4: rate_limited, retrying now"
+     7.27,
+     "w2 job bd238b8b attempt 1: ok"
     ],
     [
-     11.26,
+     7.28,
+     "w5 job aeb435d7 attempt 2: ok"
+    ],
+    [
+     7.43,
+     "KILL w7 (kill -9) while job 5adbd3e5 attempt 1 is in flight"
+    ],
+    [
+     7.44,
+     "spawn w8"
+    ],
+    [
+     8.1,
      "w8 started (naive: no lease, no idempotency key, no budget check)"
-    ],
-    [
-     11.31,
-     "w5 job 7bdb847d attempt 1: ok"
-    ],
-    [
-     11.34,
-     "w8 job 07132bd7 attempt 1: ok"
-    ],
-    [
-     11.34,
-     "w5 job 325037ec attempt 1: ok"
-    ],
-    [
-     11.37,
-     "w8 job 80b594b1 attempt 1: ok"
-    ],
-    [
-     11.38,
-     "w5 job 14f8a43d attempt 1: ok"
-    ],
-    [
-     11.41,
-     "w8 job 30d41693 attempt 1: server_error, retrying now"
-    ],
-    [
-     11.85,
-     "w6 job a9857b91 attempt 5: timeout, retrying now"
-    ],
-    [
-     11.86,
-     "w6 job a9857b91: failed after 5 tries"
-    ],
-    [
-     11.92,
-     "w6 job 8f25e4cb attempt 1: ok"
-    ],
-    [
-     11.95,
-     "w6 job fdc3cbe2 attempt 1: ok"
-    ],
-    [
-     12.15,
-     "w9 started (naive: no lease, no idempotency key, no budget check)"
-    ],
-    [
-     12.39,
-     "w6 job 386ffbe9 attempt 1: ok"
-    ],
-    [
-     12.43,
-     "w5 job d8722f9f attempt 1: timeout, retrying now"
-    ],
-    [
-     12.43,
-     "w8 job 30d41693 attempt 2: timeout, retrying now"
-    ],
-    [
-     12.44,
-     "w6 job ac8ccefc attempt 1: bad_request, retrying now"
-    ],
-    [
-     12.44,
-     "w9 job b9564a38 attempt 1: ok"
-    ],
-    [
-     12.46,
-     "w5 job d8722f9f attempt 2: ok"
-    ],
-    [
-     12.46,
-     "w6 job ac8ccefc attempt 2: bad_request, retrying now"
-    ],
-    [
-     12.46,
-     "w8 job 30d41693 attempt 3: ok"
-    ],
-    [
-     12.47,
-     "w9 job f464061f attempt 1: bad_request, retrying now"
-    ],
-    [
-     12.49,
-     "w6 job ac8ccefc attempt 3: bad_request, retrying now"
-    ],
-    [
-     12.49,
-     "w5 job c617c4ab attempt 1: bad_request, retrying now"
-    ],
-    [
-     12.5,
-     "w9 job f464061f attempt 2: bad_request, retrying now"
-    ],
-    [
-     12.51,
-     "w8 job c44c5e91 attempt 1: ok"
-    ],
-    [
-     12.51,
-     "w6 job ac8ccefc attempt 4: bad_request, retrying now"
-    ],
-    [
-     12.52,
-     "w9 job f464061f attempt 3: bad_request, retrying now"
-    ],
-    [
-     12.52,
-     "w5 job c617c4ab attempt 2: bad_request, retrying now"
-    ],
-    [
-     12.54,
-     "w6 job ac8ccefc attempt 5: bad_request, retrying now"
-    ],
-    [
-     12.54,
-     "w6 job ac8ccefc: failed after 5 tries"
-    ],
-    [
-     12.55,
-     "w5 job c617c4ab attempt 3: bad_request, retrying now"
-    ],
-    [
-     12.55,
-     "w9 job f464061f attempt 4: bad_request, retrying now"
-    ],
-    [
-     12.62,
-     "w5 job c617c4ab attempt 4: bad_request, retrying now"
-    ],
-    [
-     12.64,
-     "w6 job 499a6a7e attempt 1: ok"
-    ],
-    [
-     12.64,
-     "w9 job f464061f attempt 5: bad_request, retrying now"
-    ],
-    [
-     12.65,
-     "w9 job f464061f: failed after 5 tries"
-    ],
-    [
-     12.65,
-     "w5 job c617c4ab attempt 5: bad_request, retrying now"
-    ],
-    [
-     12.66,
-     "w5 job c617c4ab: failed after 5 tries"
-    ],
-    [
-     12.68,
-     "w6 job d34238d8 attempt 1: ok"
-    ],
-    [
-     12.72,
-     "w6 job c52e6792 attempt 1: ok"
-    ],
-    [
-     12.74,
-     "w6 job 406bba7c attempt 1: ok"
-    ],
-    [
-     12.76,
-     "w6 job 27fcd456 attempt 1: ok"
-    ],
-    [
-     12.78,
-     "w6 job 32a953a8 attempt 1: server_error, retrying now"
-    ],
-    [
-     12.8,
-     "w6 job 32a953a8 attempt 2: ok"
-    ],
-    [
-     13.22,
-     "w6 job 9c2af4be attempt 1: ok"
-    ],
-    [
-     13.24,
-     "w6 job 5199945f attempt 1: ok"
-    ],
-    [
-     13.27,
-     "w5 job d949d823 attempt 1: ok"
-    ],
-    [
-     13.55,
-     "w8 job 7c993947 attempt 1: timeout, retrying now"
-    ],
-    [
-     13.57,
-     "w8 job 7c993947 attempt 2: rate_limited, retrying now"
-    ],
-    [
-     13.61,
-     "w8 job 7c993947 attempt 3: ok"
-    ],
-    [
-     13.69,
-     "w9 job e1c67b4b attempt 1: timeout, retrying now"
-    ],
-    [
-     13.71,
-     "w9 job e1c67b4b attempt 2: ok"
     ]
    ]
   },
@@ -1920,48 +2079,56 @@
      "id": "duplicate_jobs",
      "label": "Repeated POSTs that created a second job",
      "value": 0,
+     "where": "API",
      "ok": true
     },
     {
      "id": "lost_jobs",
      "label": "Jobs lost (never finished) after workers were killed",
      "value": 0,
+     "where": "worker",
      "ok": true
     },
     {
      "id": "duplicate_charges",
      "label": "Requests the provider charged more than once",
      "value": 0,
+     "where": "API + worker",
      "ok": true
     },
     {
      "id": "over_cap",
      "label": "Provider charges above the spending cap",
      "value": "$0.0000",
+     "where": "API + worker",
      "ok": true
     },
     {
      "id": "retried_permanent",
      "label": "Retries after an error that cannot succeed",
      "value": 0,
+     "where": "worker",
      "ok": true
     },
     {
      "id": "unexplained_failures",
      "label": "Failed jobs without a reason",
      "value": 0,
+     "where": "worker",
      "ok": true
     },
     {
      "id": "ledger_covers_bill",
      "label": "Our ledger counted at least what the provider charged",
      "value": "yes",
+     "where": "worker",
      "ok": true
     },
     {
      "id": "worker_crashes",
      "label": "Workers that crashed on their own",
      "value": 0,
+     "where": "worker",
      "ok": true
     }
    ],
@@ -1973,29 +2140,31 @@
      "200": 26
     },
     "jobs": 40,
-    "succeeded": 36,
+    "succeeded": 35,
     "failed": {
      "bad_request": 2,
-     "budget_exceeded": 2
+     "budget_exceeded": 3
     },
     "stuck": 0,
-    "attempts": 51,
+    "attempts": 56,
     "attempt_outcomes": {
      "bad_request": 2,
-     "ok": 30,
-     "rate_limited": 3,
-     "timeout": 4,
+     "ok": 25,
+     "timeout": 8,
+     "rate_limited": 5,
+     "server_error": 1,
      "worker_lost": 2,
-     "server_error": 2,
-     "budget_exceeded": 2,
-     "replayed": 6
+     "budget_exceeded": 3,
+     "replayed": 10
     },
-    "workers_killed": 3,
-    "provider_calls": 49,
-    "provider_charges": 36,
-    "provider_billed_micros": 34210,
+    "workers_killed": 2,
+    "provider_calls": 53,
+    "provider_charges": 35,
+    "dup_charges_from_duplicate_jobs": 0,
+    "dup_charges_from_retries": 0,
+    "provider_billed_micros": 32510,
     "cap_micros": 42000,
-    "ledger_spent_micros": 34210
+    "ledger_spent_micros": 32510
    },
    "check_lines": [
     "-- safe mode checks: 8/8 passed",
@@ -2010,942 +2179,987 @@
    ],
    "kills": [
     {
-     "worker": "w3",
-     "job_id": "f0389287-2682-4a43-9945-d0564302537c",
+     "worker": "w2",
+     "job_id": "63db6014-94a0-42c2-b634-610eba6cd6cb",
      "attempt": 1,
-     "at": "2026-11-03T12:26:00.978160+00:00",
-     "t": 4.895952799999577
+     "at": "2026-11-03T13:01:57.923749+00:00",
+     "t": 3.4917700000005425
     },
     {
      "worker": "w4",
-     "job_id": "1b11f6a1-ff2f-4bc0-8795-48a7681167e8",
-     "attempt": 1,
-     "at": "2026-11-03T12:26:02.663510+00:00",
-     "t": 6.533556800000042
-    },
-    {
-     "worker": "w5",
-     "job_id": "1b11f6a1-ff2f-4bc0-8795-48a7681167e8",
-     "attempt": 2,
-     "at": "2026-11-03T12:26:05.612765+00:00",
-     "t": 9.398572000000058
+     "job_id": "629cd5b7-fee5-4697-9738-fd2cbf137399",
+     "attempt": 4,
+     "at": "2026-11-03T13:02:00.877117+00:00",
+     "t": 6.350743400000283
     }
    ],
    "timeline": {
-    "t0": "2026-11-03T12:26:00.455787+00:00",
+    "t0": "2026-11-03T13:01:56.945355+00:00",
     "jobs": [
      {
-      "id": "619e3e56-d0e7-4a43-af39-98f3ddb8a050",
+      "id": "baf587b2-93b0-4454-a851-a386f8a28718",
       "key": "ticket-42-000",
       "status": "failed",
       "error_kind": "bad_request"
      },
      {
-      "id": "1f75a470-bef6-4e1f-b9d9-92c1167de32d",
+      "id": "fb1a6917-b3c9-40f1-994a-fd4a03036b6a",
       "key": "ticket-42-001",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "2735c213-3102-4bca-adf9-7624154a124a",
-      "key": "ticket-42-002",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "a7c0d2c2-d09f-478e-b32a-56b1add37916",
-      "key": "ticket-42-003",
-      "status": "failed",
-      "error_kind": "budget_exceeded"
-     },
-     {
-      "id": "a40f8bdf-3803-4d7d-aa16-722703416f49",
+      "id": "dae474d9-3fc8-4a45-a569-f97112ea9549",
       "key": "ticket-42-004",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "238d5eb1-89f5-4438-bc42-eb95dc1ab749",
-      "key": "ticket-42-006",
+      "id": "da47768a-803a-4053-9908-a521138ce0d4",
+      "key": "ticket-42-002",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "43debfa2-b554-4de8-8e87-b6efd07d99ed",
+      "id": "85d9257f-f2b9-4c90-9db6-7819c6386410",
+      "key": "ticket-42-003",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "d6536f2f-5419-4487-ac95-08e6c4dc13d0",
       "key": "ticket-42-005",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "382678e5-9aa3-49f8-9b74-410a6d22af3b",
-      "key": "ticket-42-007",
+      "id": "dbe2dc52-d016-40e3-90dc-15a7c8b9c695",
+      "key": "ticket-42-006",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "f0389287-2682-4a43-9945-d0564302537c",
-      "key": "ticket-42-008",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "228788d5-62c5-4b9a-80d8-bd4b7b85b2e7",
+      "id": "91cdea2a-62d5-4b21-ae90-4325220c5216",
       "key": "ticket-42-009",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "eb5a0368-6f46-4025-a2a9-7d15e00095a5",
+      "id": "3c88b5e0-1e6b-4338-a317-940ca46be6ec",
+      "key": "ticket-42-008",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "a0e6a605-e5ce-42f5-a72f-77bdc4bc48f5",
+      "key": "ticket-42-007",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "1e234d32-11fd-4bcd-8bb1-426c0a31b6e7",
       "key": "ticket-42-010",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "dc48b034-45ef-4823-9eb3-743a2c5b0b77",
+      "id": "629cd5b7-fee5-4697-9738-fd2cbf137399",
       "key": "ticket-42-011",
-      "status": "failed",
-      "error_kind": "budget_exceeded"
+      "status": "succeeded",
+      "error_kind": null
      },
      {
-      "id": "ee7bd927-c3d6-41ee-a347-6faf8158aef7",
+      "id": "fe986dfd-8743-4c2e-be90-c43efde37600",
       "key": "ticket-42-012",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "d3714c86-6bfc-4492-976f-b3f2b83be713",
+      "id": "dd12d7b6-55aa-48f8-addb-6d736815eb88",
       "key": "ticket-42-013",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "4afddfa8-0afc-4ead-b2c9-b840e7eb223c",
+      "id": "b33aeb14-4bc4-4f21-8145-8d1742f6f61d",
       "key": "ticket-42-014",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "bace8e19-a127-4463-b283-fa96059cdad3",
+      "id": "24bb19a6-3cb1-41fd-bb63-9885daee0c0a",
       "key": "ticket-42-015",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "879ee152-10e6-4c4b-809d-b8c350576179",
-      "key": "ticket-42-017",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "8ecb8e56-797d-48df-8e01-5c1bec12695e",
+      "id": "5a6859d6-afed-4983-8cf2-3b85fa1cb621",
       "key": "ticket-42-016",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "a45125c1-ca0a-4eae-a9a0-7e4ab7972065",
+      "id": "927e2a38-d26d-438e-be65-dae204784253",
+      "key": "ticket-42-017",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "2fee4651-7c84-4020-9c23-57b9b0773034",
       "key": "ticket-42-018",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "540697a2-c741-41b9-b744-5287476e4927",
-      "key": "ticket-42-019",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "b878e321-48f8-4fde-9545-0339be601200",
+      "id": "93a00186-49f2-4678-b63d-00da8698ca25",
       "key": "ticket-42-020",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "b5374377-c723-417c-ae70-84a979c7bf3e",
+      "id": "087d656b-58cd-4f4e-b3dd-6add28da6799",
+      "key": "ticket-42-019",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "0ba26262-e009-4dce-9230-9a5cf9d0d4b2",
       "key": "ticket-42-021",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "ab49f1d6-e351-4409-8121-4b5089021472",
+      "id": "f25421d9-41db-427c-aa85-6fc87135ba1c",
       "key": "ticket-42-022",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "66f6be54-2f83-46b1-8671-e1a395b78fbb",
+      "id": "bce39eb3-698c-441a-a931-e7c15dbaf21e",
       "key": "ticket-42-023",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "b634ef75-feac-4be3-becb-f96348cdc714",
+      "id": "63db6014-94a0-42c2-b634-610eba6cd6cb",
       "key": "ticket-42-024",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "7e5d0e5e-7104-4bd1-a21c-012c47d4a7e0",
-      "key": "ticket-42-026",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "b5fb75ae-382a-4dfa-a5c0-948f840450e3",
+      "id": "91cef4c5-165c-48f0-9725-2f51b936fce6",
       "key": "ticket-42-025",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "986d681d-b410-484c-9e8a-9377d80c90b8",
+      "id": "46fe2605-8ab1-4238-8440-257bc573aac0",
+      "key": "ticket-42-026",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "ef29c68f-5d0f-4ad3-ae68-a870e6979795",
       "key": "ticket-42-027",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "fc29c6df-e6cd-4b49-bf94-da508fd785c7",
+      "id": "28170753-8ede-49bf-9083-d34f8a05c941",
       "key": "ticket-42-028",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "04d1bf36-e192-49c6-9d6a-bd488d5bda44",
+      "id": "fd57cb28-2631-4de7-8cd1-9bebcaa45cae",
       "key": "ticket-42-029",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "3c48ee8e-248b-4241-8dfb-7a091ad93deb",
+      "id": "a1ff289f-8c80-4fa3-91f7-733418c829a5",
       "key": "ticket-42-030",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "809e1d53-e5a2-4e3d-87bf-a4b1290a373a",
+      "id": "1c96a1fa-6fda-4f4b-b7c9-be1220aaa77d",
       "key": "ticket-42-031",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "178787ee-443f-4316-b356-2f6f969d73eb",
-      "key": "ticket-42-033",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "9013ee1a-0ebc-40aa-a8ea-23ffe9da4bb5",
+      "id": "dade855f-7833-4932-b0fd-e2f44fe97785",
       "key": "ticket-42-032",
       "status": "failed",
       "error_kind": "bad_request"
      },
      {
-      "id": "64c806d2-eb84-4b09-95bf-91a9f2435dc6",
+      "id": "87883808-9be8-4d08-bba1-29ab70e2c108",
+      "key": "ticket-42-033",
+      "status": "succeeded",
+      "error_kind": null
+     },
+     {
+      "id": "45bc7901-d8f1-4ccf-b7c2-fe6dd82ce76e",
       "key": "ticket-42-034",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "1b11f6a1-ff2f-4bc0-8795-48a7681167e8",
+      "id": "8d4f5d41-50c3-44a6-9265-250219aca9a4",
       "key": "ticket-42-035",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "92020581-2784-4b18-af4d-70d6e3ead62f",
+      "id": "cf933961-5599-4a37-b641-66a3896d928c",
+      "key": "ticket-42-036",
+      "status": "failed",
+      "error_kind": "budget_exceeded"
+     },
+     {
+      "id": "f8ec9ff5-342b-4ccf-8c40-8ef618add742",
       "key": "ticket-42-037",
       "status": "succeeded",
       "error_kind": null
      },
      {
-      "id": "e2585ea4-c7f6-4cbb-9de7-a7d74fbb57d8",
-      "key": "ticket-42-038",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "a6557f0a-3bf2-4719-b42b-3a525f6ae371",
-      "key": "ticket-42-036",
-      "status": "succeeded",
-      "error_kind": null
-     },
-     {
-      "id": "35fd231e-330c-47a8-a4cb-2550133685eb",
+      "id": "8f2ab212-004c-40f0-8873-0c2631d5fc5a",
       "key": "ticket-42-039",
-      "status": "succeeded",
-      "error_kind": null
+      "status": "failed",
+      "error_kind": "budget_exceeded"
+     },
+     {
+      "id": "dc8b10fe-8d27-4058-adb4-ec0620258ad2",
+      "key": "ticket-42-038",
+      "status": "failed",
+      "error_kind": "budget_exceeded"
      }
     ],
     "attempts": [
      {
-      "job_id": "619e3e56-d0e7-4a43-af39-98f3ddb8a050",
+      "job_id": "baf587b2-93b0-4454-a851-a386f8a28718",
       "attempt": 1,
-      "worker": "w1",
+      "worker": "w2",
       "start": 0.0,
-      "end": 0.039966,
+      "end": 0.025591,
       "outcome": "bad_request"
      },
      {
-      "job_id": "1f75a470-bef6-4e1f-b9d9-92c1167de32d",
-      "attempt": 1,
-      "worker": "w3",
-      "start": 0.023469,
-      "end": 0.06151,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "2735c213-3102-4bca-adf9-7624154a124a",
-      "attempt": 1,
-      "worker": "w2",
-      "start": 0.037737,
-      "end": 0.69071,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "a7c0d2c2-d09f-478e-b32a-56b1add37916",
+      "job_id": "fb1a6917-b3c9-40f1-994a-fd4a03036b6a",
       "attempt": 1,
       "worker": "w4",
-      "start": 0.041108,
-      "end": 0.072731,
-      "outcome": "rate_limited"
-     },
-     {
-      "job_id": "a40f8bdf-3803-4d7d-aa16-722703416f49",
-      "attempt": 1,
-      "worker": "w1",
-      "start": 0.055691,
-      "end": 0.094721,
+      "start": 0.002545,
+      "end": 0.03288,
       "outcome": "ok"
      },
      {
-      "job_id": "238d5eb1-89f5-4438-bc42-eb95dc1ab749",
+      "job_id": "dae474d9-3fc8-4a45-a569-f97112ea9549",
+      "attempt": 1,
+      "worker": "w1",
+      "start": 0.008812,
+      "end": 0.039882,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "da47768a-803a-4053-9908-a521138ce0d4",
       "attempt": 1,
       "worker": "w3",
-      "start": 0.089949,
-      "end": 0.11862,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "43debfa2-b554-4de8-8e87-b6efd07d99ed",
-      "attempt": 1,
-      "worker": "w4",
-      "start": 0.100062,
-      "end": 0.133198,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "382678e5-9aa3-49f8-9b74-410a6d22af3b",
-      "attempt": 1,
-      "worker": "w1",
-      "start": 0.109076,
-      "end": 1.197674,
+      "start": 0.013458,
+      "end": 0.575829,
       "outcome": "timeout"
      },
      {
-      "job_id": "f0389287-2682-4a43-9945-d0564302537c",
+      "job_id": "85d9257f-f2b9-4c90-9db6-7819c6386410",
       "attempt": 1,
-      "worker": "w3",
-      "start": 0.133063,
-      "end": 3.196885,
-      "outcome": "worker_lost"
-     },
-     {
-      "job_id": "228788d5-62c5-4b9a-80d8-bd4b7b85b2e7",
-      "attempt": 1,
-      "worker": "w4",
-      "start": 0.147757,
-      "end": 0.170496,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "eb5a0368-6f46-4025-a2a9-7d15e00095a5",
-      "attempt": 1,
-      "worker": "w4",
-      "start": 0.183895,
-      "end": 0.20648,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "dc48b034-45ef-4823-9eb3-743a2c5b0b77",
-      "attempt": 1,
-      "worker": "w4",
-      "start": 0.220623,
-      "end": 0.239392,
+      "worker": "w2",
+      "start": 0.036508,
+      "end": 0.060739,
       "outcome": "rate_limited"
      },
      {
-      "job_id": "ee7bd927-c3d6-41ee-a347-6faf8158aef7",
+      "job_id": "d6536f2f-5419-4487-ac95-08e6c4dc13d0",
       "attempt": 1,
       "worker": "w4",
-      "start": 0.258734,
-      "end": 0.290154,
+      "start": 0.043667,
+      "end": 0.067777,
       "outcome": "ok"
      },
      {
-      "job_id": "d3714c86-6bfc-4492-976f-b3f2b83be713",
+      "job_id": "dbe2dc52-d016-40e3-90dc-15a7c8b9c695",
+      "attempt": 1,
+      "worker": "w1",
+      "start": 0.051069,
+      "end": 0.075368,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "91cdea2a-62d5-4b21-ae90-4325220c5216",
+      "attempt": 1,
+      "worker": "w2",
+      "start": 0.071726,
+      "end": 0.097117,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "3c88b5e0-1e6b-4338-a317-940ca46be6ec",
       "attempt": 1,
       "worker": "w4",
-      "start": 0.325236,
-      "end": 0.35132,
+      "start": 0.079226,
+      "end": 0.612515,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "a0e6a605-e5ce-42f5-a72f-77bdc4bc48f5",
+      "attempt": 1,
+      "worker": "w1",
+      "start": 0.086005,
+      "end": 0.631238,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "1e234d32-11fd-4bcd-8bb1-426c0a31b6e7",
+      "attempt": 1,
+      "worker": "w2",
+      "start": 0.108274,
+      "end": 0.123983,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "629cd5b7-fee5-4697-9738-fd2cbf137399",
+      "attempt": 1,
+      "worker": "w2",
+      "start": 0.133313,
+      "end": 0.146785,
+      "outcome": "rate_limited"
+     },
+     {
+      "job_id": "fe986dfd-8743-4c2e-be90-c43efde37600",
+      "attempt": 1,
+      "worker": "w2",
+      "start": 0.157949,
+      "end": 0.176273,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "dd12d7b6-55aa-48f8-addb-6d736815eb88",
+      "attempt": 1,
+      "worker": "w2",
+      "start": 0.185517,
+      "end": 0.198354,
       "outcome": "server_error"
      },
      {
-      "job_id": "4afddfa8-0afc-4ead-b2c9-b840e7eb223c",
+      "job_id": "b33aeb14-4bc4-4f21-8145-8d1742f6f61d",
       "attempt": 1,
-      "worker": "w4",
-      "start": 0.371718,
-      "end": 1.438544,
+      "worker": "w2",
+      "start": 0.207875,
+      "end": 0.739462,
       "outcome": "timeout"
      },
      {
-      "job_id": "bace8e19-a127-4463-b283-fa96059cdad3",
+      "job_id": "24bb19a6-3cb1-41fd-bb63-9885daee0c0a",
       "attempt": 1,
-      "worker": "w2",
-      "start": 0.739582,
-      "end": 1.144385,
+      "worker": "w3",
+      "start": 0.592021,
+      "end": 0.826669,
       "outcome": "ok"
      },
      {
-      "job_id": "879ee152-10e6-4c4b-809d-b8c350576179",
+      "job_id": "5a6859d6-afed-4983-8cf2-3b85fa1cb621",
       "attempt": 1,
-      "worker": "w2",
-      "start": 1.20615,
-      "end": 1.239405,
+      "worker": "w4",
+      "start": 0.622142,
+      "end": 0.6393,
       "outcome": "ok"
      },
      {
-      "job_id": "8ecb8e56-797d-48df-8e01-5c1bec12695e",
+      "job_id": "927e2a38-d26d-438e-be65-dae204784253",
       "attempt": 1,
       "worker": "w1",
-      "start": 1.218122,
-      "end": 1.251527,
+      "start": 0.641098,
+      "end": 0.659727,
       "outcome": "ok"
      },
      {
-      "job_id": "a45125c1-ca0a-4eae-a9a0-7e4ab7972065",
+      "job_id": "2fee4651-7c84-4020-9c23-57b9b0773034",
       "attempt": 1,
-      "worker": "w2",
-      "start": 1.255472,
-      "end": 1.284181,
+      "worker": "w4",
+      "start": 0.649274,
+      "end": 0.666391,
       "outcome": "ok"
      },
      {
-      "job_id": "540697a2-c741-41b9-b744-5287476e4927",
+      "job_id": "93a00186-49f2-4678-b63d-00da8698ca25",
       "attempt": 1,
       "worker": "w1",
-      "start": 1.267301,
-      "end": 1.290566,
+      "start": 0.670406,
+      "end": 1.210234,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "087d656b-58cd-4f4e-b3dd-6add28da6799",
+      "attempt": 1,
+      "worker": "w4",
+      "start": 0.67967,
+      "end": 0.696658,
       "outcome": "rate_limited"
      },
      {
-      "job_id": "b878e321-48f8-4fde-9545-0339be601200",
+      "job_id": "0ba26262-e009-4dce-9230-9a5cf9d0d4b2",
+      "attempt": 1,
+      "worker": "w4",
+      "start": 0.706177,
+      "end": 0.721288,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "f25421d9-41db-427c-aa85-6fc87135ba1c",
+      "attempt": 1,
+      "worker": "w4",
+      "start": 0.730488,
+      "end": 1.100381,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "bce39eb3-698c-441a-a931-e7c15dbaf21e",
       "attempt": 1,
       "worker": "w2",
-      "start": 1.300511,
-      "end": 2.36007,
+      "start": 0.748488,
+      "end": 0.775581,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "63db6014-94a0-42c2-b634-610eba6cd6cb",
+      "attempt": 1,
+      "worker": "w2",
+      "start": 0.784782,
+      "end": 3.819802,
+      "outcome": "worker_lost"
+     },
+     {
+      "job_id": "91cef4c5-165c-48f0-9725-2f51b936fce6",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 0.836306,
+      "end": 0.854461,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "46fe2605-8ab1-4238-8440-257bc573aac0",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 0.867696,
+      "end": 0.883496,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "ef29c68f-5d0f-4ad3-ae68-a870e6979795",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 0.893011,
+      "end": 0.90785,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "28170753-8ede-49bf-9083-d34f8a05c941",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 0.918966,
+      "end": 0.937028,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "fd57cb28-2631-4de7-8cd1-9bebcaa45cae",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 0.946495,
+      "end": 1.479319,
       "outcome": "timeout"
      },
      {
-      "job_id": "b5374377-c723-417c-ae70-84a979c7bf3e",
-      "attempt": 1,
-      "worker": "w1",
-      "start": 1.309419,
-      "end": 1.35712,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "ab49f1d6-e351-4409-8121-4b5089021472",
-      "attempt": 1,
-      "worker": "w1",
-      "start": 1.375695,
-      "end": 1.747938,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "66f6be54-2f83-46b1-8671-e1a395b78fbb",
+      "job_id": "a1ff289f-8c80-4fa3-91f7-733418c829a5",
       "attempt": 1,
       "worker": "w4",
-      "start": 1.454844,
-      "end": 1.483906,
+      "start": 1.116169,
+      "end": 1.513258,
       "outcome": "ok"
      },
      {
-      "job_id": "b634ef75-feac-4be3-becb-f96348cdc714",
-      "attempt": 1,
-      "worker": "w4",
-      "start": 1.497814,
-      "end": 1.898448,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "7e5d0e5e-7104-4bd1-a21c-012c47d4a7e0",
+      "job_id": "1c96a1fa-6fda-4f4b-b7c9-be1220aaa77d",
       "attempt": 1,
       "worker": "w1",
-      "start": 1.765393,
-      "end": 1.791829,
+      "start": 1.223837,
+      "end": 1.263285,
       "outcome": "ok"
      },
      {
-      "job_id": "b5fb75ae-382a-4dfa-a5c0-948f840450e3",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 1.770262,
-      "end": 1.802725,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "986d681d-b410-484c-9e8a-9377d80c90b8",
+      "job_id": "dade855f-7833-4932-b0fd-e2f44fe97785",
       "attempt": 1,
       "worker": "w1",
-      "start": 1.806651,
-      "end": 1.850775,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "fc29c6df-e6cd-4b49-bf94-da508fd785c7",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 1.83954,
-      "end": 1.881319,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "04d1bf36-e192-49c6-9d6a-bd488d5bda44",
-      "attempt": 1,
-      "worker": "w1",
-      "start": 1.868657,
-      "end": 2.945062,
-      "outcome": "timeout"
-     },
-     {
-      "job_id": "3c48ee8e-248b-4241-8dfb-7a091ad93deb",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 1.898408,
-      "end": 2.307256,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "809e1d53-e5a2-4e3d-87bf-a4b1290a373a",
-      "attempt": 1,
-      "worker": "w4",
-      "start": 1.914496,
-      "end": 1.938713,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "178787ee-443f-4316-b356-2f6f969d73eb",
-      "attempt": 1,
-      "worker": "w4",
-      "start": 1.953473,
-      "end": 1.976105,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "9013ee1a-0ebc-40aa-a8ea-23ffe9da4bb5",
-      "attempt": 1,
-      "worker": "w4",
-      "start": 1.98847,
-      "end": 2.00692,
+      "start": 1.275176,
+      "end": 1.292614,
       "outcome": "bad_request"
      },
      {
-      "job_id": "64c806d2-eb84-4b09-95bf-91a9f2435dc6",
+      "job_id": "87883808-9be8-4d08-bba1-29ab70e2c108",
       "attempt": 1,
-      "worker": "w4",
-      "start": 2.019674,
-      "end": 2.039032,
+      "worker": "w1",
+      "start": 1.304767,
+      "end": 1.321836,
       "outcome": "ok"
      },
      {
-      "job_id": "1b11f6a1-ff2f-4bc0-8795-48a7681167e8",
+      "job_id": "45bc7901-d8f1-4ccf-b7c2-fe6dd82ce76e",
+      "attempt": 1,
+      "worker": "w1",
+      "start": 1.334451,
+      "end": 1.352704,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "8d4f5d41-50c3-44a6-9265-250219aca9a4",
+      "attempt": 1,
+      "worker": "w1",
+      "start": 1.364494,
+      "end": 1.896736,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "cf933961-5599-4a37-b641-66a3896d928c",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 1.492622,
+      "end": 1.497587,
+      "outcome": "budget_exceeded"
+     },
+     {
+      "job_id": "f8ec9ff5-342b-4ccf-8c40-8ef618add742",
+      "attempt": 1,
+      "worker": "w3",
+      "start": 1.507778,
+      "end": 1.531196,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "8f2ab212-004c-40f0-8873-0c2631d5fc5a",
       "attempt": 1,
       "worker": "w4",
-      "start": 2.05003,
-      "end": 5.096618,
+      "start": 1.52383,
+      "end": 1.529632,
+      "outcome": "budget_exceeded"
+     },
+     {
+      "job_id": "dc8b10fe-8d27-4058-adb4-ec0620258ad2",
+      "attempt": 1,
+      "worker": "w4",
+      "start": 1.539679,
+      "end": 1.545104,
+      "outcome": "budget_exceeded"
+     },
+     {
+      "job_id": "dd12d7b6-55aa-48f8-addb-6d736815eb88",
+      "attempt": 2,
+      "worker": "w3",
+      "start": 1.540736,
+      "end": 2.078938,
+      "outcome": "timeout"
+     },
+     {
+      "job_id": "a0e6a605-e5ce-42f5-a72f-77bdc4bc48f5",
+      "attempt": 2,
+      "worker": "w4",
+      "start": 1.555428,
+      "end": 1.572798,
+      "outcome": "replayed"
+     },
+     {
+      "job_id": "3c88b5e0-1e6b-4338-a317-940ca46be6ec",
+      "attempt": 2,
+      "worker": "w4",
+      "start": 1.58241,
+      "end": 1.598666,
+      "outcome": "replayed"
+     },
+     {
+      "job_id": "da47768a-803a-4053-9908-a521138ce0d4",
+      "attempt": 2,
+      "worker": "w4",
+      "start": 1.60846,
+      "end": 1.626402,
+      "outcome": "replayed"
+     },
+     {
+      "job_id": "b33aeb14-4bc4-4f21-8145-8d1742f6f61d",
+      "attempt": 2,
+      "worker": "w4",
+      "start": 1.638919,
+      "end": 1.660265,
+      "outcome": "replayed"
+     },
+     {
+      "job_id": "85d9257f-f2b9-4c90-9db6-7819c6386410",
+      "attempt": 2,
+      "worker": "w4",
+      "start": 1.672676,
+      "end": 1.692483,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "629cd5b7-fee5-4697-9738-fd2cbf137399",
+      "attempt": 2,
+      "worker": "w4",
+      "start": 1.707041,
+      "end": 1.72898,
+      "outcome": "rate_limited"
+     },
+     {
+      "job_id": "93a00186-49f2-4678-b63d-00da8698ca25",
+      "attempt": 2,
+      "worker": "w5",
+      "start": 1.714944,
+      "end": 1.744773,
+      "outcome": "replayed"
+     },
+     {
+      "job_id": "fd57cb28-2631-4de7-8cd1-9bebcaa45cae",
+      "attempt": 2,
+      "worker": "w4",
+      "start": 1.741322,
+      "end": 1.764596,
+      "outcome": "replayed"
+     },
+     {
+      "job_id": "087d656b-58cd-4f4e-b3dd-6add28da6799",
+      "attempt": 2,
+      "worker": "w5",
+      "start": 1.75809,
+      "end": 1.780387,
+      "outcome": "ok"
+     },
+     {
+      "job_id": "8d4f5d41-50c3-44a6-9265-250219aca9a4",
+      "attempt": 2,
+      "worker": "w3",
+      "start": 2.092039,
+      "end": 2.109539,
+      "outcome": "replayed"
+     },
+     {
+      "job_id": "dd12d7b6-55aa-48f8-addb-6d736815eb88",
+      "attempt": 3,
+      "worker": "w4",
+      "start": 2.237767,
+      "end": 2.255927,
+      "outcome": "replayed"
+     },
+     {
+      "job_id": "629cd5b7-fee5-4697-9738-fd2cbf137399",
+      "attempt": 3,
+      "worker": "w1",
+      "start": 2.795903,
+      "end": 2.821122,
+      "outcome": "rate_limited"
+     },
+     {
+      "job_id": "63db6014-94a0-42c2-b634-610eba6cd6cb",
+      "attempt": 2,
+      "worker": "w4",
+      "start": 3.833933,
+      "end": 3.85475,
+      "outcome": "replayed"
+     },
+     {
+      "job_id": "629cd5b7-fee5-4697-9738-fd2cbf137399",
+      "attempt": 4,
+      "worker": "w4",
+      "start": 3.8659,
+      "end": 6.919311,
       "outcome": "worker_lost"
      },
      {
-      "job_id": "92020581-2784-4b18-af4d-70d6e3ead62f",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 2.323803,
-      "end": 2.37328,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "e2585ea4-c7f6-4cbb-9de7-a7d74fbb57d8",
-      "attempt": 1,
-      "worker": "w2",
-      "start": 2.378397,
-      "end": 2.407519,
-      "outcome": "server_error"
-     },
-     {
-      "job_id": "a6557f0a-3bf2-4719-b42b-3a525f6ae371",
-      "attempt": 1,
-      "worker": "w5",
-      "start": 2.388178,
-      "end": 2.434818,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "35fd231e-330c-47a8-a4cb-2550133685eb",
-      "attempt": 1,
-      "worker": "w2",
-      "start": 2.439478,
-      "end": 2.867776,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "d3714c86-6bfc-4492-976f-b3f2b83be713",
-      "attempt": 2,
-      "worker": "w5",
-      "start": 2.451442,
-      "end": 3.068692,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "a7c0d2c2-d09f-478e-b32a-56b1add37916",
-      "attempt": 2,
-      "worker": "w2",
-      "start": 2.881936,
-      "end": 2.887584,
-      "outcome": "budget_exceeded"
-     },
-     {
-      "job_id": "dc48b034-45ef-4823-9eb3-743a2c5b0b77",
-      "attempt": 2,
-      "worker": "w2",
-      "start": 2.899288,
-      "end": 2.90471,
-      "outcome": "budget_exceeded"
-     },
-     {
-      "job_id": "382678e5-9aa3-49f8-9b74-410a6d22af3b",
-      "attempt": 2,
-      "worker": "w2",
-      "start": 2.916553,
-      "end": 2.935929,
-      "outcome": "replayed"
-     },
-     {
-      "job_id": "4afddfa8-0afc-4ead-b2c9-b840e7eb223c",
-      "attempt": 2,
-      "worker": "w2",
-      "start": 2.946825,
-      "end": 2.976179,
-      "outcome": "replayed"
-     },
-     {
-      "job_id": "540697a2-c741-41b9-b744-5287476e4927",
-      "attempt": 2,
-      "worker": "w1",
-      "start": 2.956998,
-      "end": 2.988762,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "b878e321-48f8-4fde-9545-0339be601200",
-      "attempt": 2,
-      "worker": "w2",
-      "start": 2.995761,
-      "end": 3.052803,
-      "outcome": "replayed"
-     },
-     {
-      "job_id": "e2585ea4-c7f6-4cbb-9de7-a7d74fbb57d8",
-      "attempt": 2,
-      "worker": "w1",
-      "start": 3.038167,
-      "end": 3.080721,
-      "outcome": "ok"
-     },
-     {
-      "job_id": "04d1bf36-e192-49c6-9d6a-bd488d5bda44",
-      "attempt": 2,
-      "worker": "w2",
-      "start": 3.068686,
-      "end": 3.109089,
-      "outcome": "replayed"
-     },
-     {
-      "job_id": "f0389287-2682-4a43-9945-d0564302537c",
-      "attempt": 2,
-      "worker": "w1",
-      "start": 3.208027,
-      "end": 3.232851,
-      "outcome": "replayed"
-     },
-     {
-      "job_id": "1b11f6a1-ff2f-4bc0-8795-48a7681167e8",
-      "attempt": 2,
-      "worker": "w5",
-      "start": 5.111014,
-      "end": 5.13325,
+      "job_id": "629cd5b7-fee5-4697-9738-fd2cbf137399",
+      "attempt": 5,
+      "worker": "w3",
+      "start": 6.927666,
+      "end": 6.944463,
       "outcome": "replayed"
      }
     ]
    },
    "log": [
     [
-     1.84,
-     "== SAFE mode: fake provider on :56773 (seed 42), cap $0.0420, 40 requests"
+     1.34,
+     "== SAFE mode: fake provider on :54675 (seed 42), cap $0.0420, 40 requests"
     ],
     [
-     2.96,
+     1.59,
      "client sent 66 POSTs for 40 requests -> 26x HTTP 200, 40x HTTP 201"
     ],
     [
-     4.36,
-     "w1 started (provider=fake, dry_run=False, lease=3.0s)"
-    ],
-    [
-     4.39,
-     "w3 started (provider=fake, dry_run=False, lease=3.0s)"
-    ],
-    [
-     4.4,
+     2.52,
      "w2 started (provider=fake, dry_run=False, lease=3.0s)"
     ],
     [
-     4.41,
+     2.53,
      "w4 started (provider=fake, dry_run=False, lease=3.0s)"
     ],
     [
-     4.43,
-     "w1 job 619e3e56 attempt 1: bad_request, job failed"
+     2.54,
+     "w1 started (provider=fake, dry_run=False, lease=3.0s)"
     ],
     [
-     4.45,
-     "w3 job 1f75a470 attempt 1: ok, cost $0.0007"
+     2.54,
+     "w3 started (provider=fake, dry_run=False, lease=3.0s)"
     ],
     [
-     4.46,
-     "w4 job a7c0d2c2 attempt 1: rate_limited, retry in 1.0s"
+     2.57,
+     "w2 job baf587b2 attempt 1: bad_request, job failed"
     ],
     [
-     4.48,
-     "w1 job a40f8bdf attempt 1: ok, cost $0.0008"
+     2.58,
+     "w4 job fb1a6917 attempt 1: ok, cost $0.0007"
     ],
     [
-     4.5,
-     "w3 job 238d5eb1 attempt 1: ok, cost $0.0012"
+     2.58,
+     "w1 job dae474d9 attempt 1: ok, cost $0.0008"
     ],
     [
-     4.52,
-     "w4 job 43debfa2 attempt 1: ok, cost $0.0005"
+     2.6,
+     "w2 job 85d9257f attempt 1: rate_limited, retry in 1.0s"
     ],
     [
-     4.55,
-     "w4 job 228788d5 attempt 1: ok, cost $0.0009"
+     2.61,
+     "w4 job d6536f2f attempt 1: ok, cost $0.0005"
     ],
     [
-     4.59,
-     "w4 job eb5a0368 attempt 1: ok, cost $0.0005"
+     2.62,
+     "w1 job dbe2dc52 attempt 1: ok, cost $0.0012"
     ],
     [
-     4.62,
-     "w4 job dc48b034 attempt 1: rate_limited, retry in 1.0s"
+     2.64,
+     "w2 job 91cdea2a attempt 1: ok, cost $0.0009"
     ],
     [
-     4.67,
-     "w4 job ee7bd927 attempt 1: ok, cost $0.0006"
+     2.66,
+     "w2 job 1e234d32 attempt 1: ok, cost $0.0005"
     ],
     [
-     4.73,
-     "w4 job d3714c86 attempt 1: server_error, retry in 0.2s"
+     2.69,
+     "w2 job 629cd5b7 attempt 1: rate_limited, retry in 1.0s"
     ],
     [
-     4.9,
-     "KILL w3 (kill -9) while job f0389287 attempt 1 is in flight"
+     2.72,
+     "w2 job fe986dfd attempt 1: ok, cost $0.0006"
     ],
     [
-     4.91,
+     2.74,
+     "w2 job dd12d7b6 attempt 1: server_error, retry in 0.1s"
+    ],
+    [
+     3.1,
+     "w3 job da47768a attempt 1: timeout, retry in 0.1s"
+    ],
+    [
+     3.14,
+     "w4 job 3c88b5e0 attempt 1: timeout, retry in 0.0s"
+    ],
+    [
+     3.16,
+     "w1 job a0e6a605 attempt 1: timeout, retry in 0.0s"
+    ],
+    [
+     3.16,
+     "w4 job 5a6859d6 attempt 1: ok, cost $0.0008"
+    ],
+    [
+     3.18,
+     "w1 job 927e2a38 attempt 1: ok, cost $0.0005"
+    ],
+    [
+     3.19,
+     "w4 job 2fee4651 attempt 1: ok, cost $0.0009"
+    ],
+    [
+     3.22,
+     "w4 job 087d656b attempt 1: rate_limited, retry in 1.0s"
+    ],
+    [
+     3.24,
+     "w4 job 0ba26262 attempt 1: ok, cost $0.0014"
+    ],
+    [
+     3.26,
+     "w2 job b33aeb14 attempt 1: timeout, retry in 0.1s"
+    ],
+    [
+     3.3,
+     "w2 job bce39eb3 attempt 1: ok, cost $0.0007"
+    ],
+    [
+     3.35,
+     "w3 job 24bb19a6 attempt 1: ok, cost $0.0013"
+    ],
+    [
+     3.37,
+     "w3 job 91cef4c5 attempt 1: ok, cost $0.0012"
+    ],
+    [
+     3.4,
+     "w3 job 46fe2605 attempt 1: ok, cost $0.0010"
+    ],
+    [
+     3.42,
+     "w3 job ef29c68f attempt 1: ok, cost $0.0011"
+    ],
+    [
+     3.45,
+     "w3 job 28170753 attempt 1: ok, cost $0.0006"
+    ],
+    [
+     3.49,
+     "KILL w2 (kill -9) while job 63db6014 attempt 1 is in flight"
+    ],
+    [
+     3.5,
      "spawn w5"
     ],
     [
-     5.06,
-     "w2 job 2735c213 attempt 1: ok, cost $0.0013"
+     3.61,
+     "w4 job f25421d9 attempt 1: ok, cost $0.0010"
     ],
     [
-     5.53,
-     "w2 job bace8e19 attempt 1: ok, cost $0.0013"
+     3.72,
+     "w1 job 93a00186 attempt 1: timeout, retry in 0.1s"
     ],
     [
-     5.55,
-     "w1 job 382678e5 attempt 1: timeout, retry in 0.1s"
+     3.77,
+     "w1 job 1c96a1fa attempt 1: ok, cost $0.0010"
     ],
     [
-     5.59,
-     "w2 job 879ee152 attempt 1: ok, cost $0.0005"
+     3.8,
+     "w1 job dade855f attempt 1: bad_request, job failed"
     ],
     [
-     5.61,
-     "w1 job 8ecb8e56 attempt 1: ok, cost $0.0008"
+     3.82,
+     "w1 job 87883808 attempt 1: ok, cost $0.0008"
     ],
     [
-     5.64,
-     "w2 job a45125c1 attempt 1: ok, cost $0.0009"
+     3.86,
+     "w1 job 45bc7901 attempt 1: ok, cost $0.0014"
     ],
     [
-     5.64,
-     "w1 job 540697a2 attempt 1: rate_limited, retry in 1.0s"
+     3.98,
+     "w3 job fd57cb28 attempt 1: timeout, retry in 0.2s"
     ],
     [
-     5.71,
-     "w1 job b5374377 attempt 1: ok, cost $0.0014"
+     3.99,
+     "w3 job cf933961 attempt 1: refused, spending cap reached"
     ],
     [
-     5.79,
-     "w4 job 4afddfa8 attempt 1: timeout, retry in 0.1s"
+     4.01,
+     "w4 job a1ff289f attempt 1: ok, cost $0.0014"
     ],
     [
-     5.83,
-     "w4 job 66f6be54 attempt 1: ok, cost $0.0007"
+     4.03,
+     "w4 job 8f2ab212 attempt 1: refused, spending cap reached"
     ],
     [
-     6.09,
-     "w1 job ab49f1d6 attempt 1: ok, cost $0.0010"
+     4.03,
+     "w3 job f8ec9ff5 attempt 1: ok, cost $0.0007"
     ],
     [
-     6.09,
+     4.04,
+     "w4 job dc8b10fe attempt 1: refused, spending cap reached"
+    ],
+    [
+     4.07,
+     "w4 job a0e6a605 attempt 2: replayed (stored reply, not paid again)"
+    ],
+    [
+     4.09,
+     "w4 job 3c88b5e0 attempt 2: replayed (stored reply, not paid again)"
+    ],
+    [
+     4.12,
+     "w4 job da47768a attempt 2: replayed (stored reply, not paid again)"
+    ],
+    [
+     4.15,
+     "w4 job b33aeb14 attempt 2: replayed (stored reply, not paid again)"
+    ],
+    [
+     4.18,
+     "w4 job 85d9257f attempt 2: ok, cost $0.0014"
+    ],
+    [
+     4.19,
      "w5 started (provider=fake, dry_run=False, lease=3.0s)"
     ],
     [
-     6.13,
-     "w1 job 7e5d0e5e attempt 1: ok, cost $0.0010"
+     4.22,
+     "w4 job 629cd5b7 attempt 2: rate_limited, retry in 1.0s"
     ],
     [
-     6.14,
-     "w5 job b5fb75ae attempt 1: ok, cost $0.0012"
+     4.23,
+     "w5 job 93a00186 attempt 2: replayed (stored reply, not paid again)"
     ],
     [
-     6.19,
-     "w1 job 986d681d attempt 1: ok, cost $0.0011"
+     4.25,
+     "w4 job fd57cb28 attempt 2: replayed (stored reply, not paid again)"
     ],
     [
-     6.22,
-     "w5 job fc29c6df attempt 1: ok, cost $0.0006"
+     4.27,
+     "w5 job 087d656b attempt 2: ok, cost $0.0009"
+    ],
+    [
+     4.38,
+     "w1 job 8d4f5d41 attempt 1: timeout, retry in 0.2s"
+    ],
+    [
+     4.56,
+     "w3 job dd12d7b6 attempt 2: timeout, retry in 0.1s"
+    ],
+    [
+     4.59,
+     "w3 job 8d4f5d41 attempt 2: replayed (stored reply, not paid again)"
+    ],
+    [
+     4.73,
+     "w4 job dd12d7b6 attempt 3: replayed (stored reply, not paid again)"
+    ],
+    [
+     5.28,
+     "w1 job 629cd5b7 attempt 3: rate_limited, retry in 1.0s"
     ],
     [
      6.24,
-     "w4 job b634ef75 attempt 1: ok, cost $0.0013"
+     "w4 job 63db6014 attempt 1: lease of w2 expired, job requeued"
     ],
     [
-     6.27,
-     "w4 job 809e1d53 attempt 1: ok, cost $0.0010"
+     6.28,
+     "w4 job 63db6014 attempt 2: replayed (stored reply, not paid again)"
     ],
     [
-     6.31,
-     "w4 job 178787ee attempt 1: ok, cost $0.0008"
+     6.35,
+     "KILL w4 (kill -9) while job 629cd5b7 attempt 4 is in flight"
     ],
     [
-     6.34,
-     "w4 job 9013ee1a attempt 1: bad_request, job failed"
-    ],
-    [
-     6.37,
-     "w4 job 64c806d2 attempt 1: ok, cost $0.0014"
-    ],
-    [
-     6.53,
-     "KILL w4 (kill -9) while job 1b11f6a1 attempt 1 is in flight"
-    ],
-    [
-     6.55,
+     6.36,
      "spawn w6"
     ],
     [
-     6.63,
-     "w5 job 3c48ee8e attempt 1: ok, cost $0.0014"
-    ],
-    [
-     6.68,
-     "w2 job b878e321 attempt 1: timeout, retry in 0.0s"
-    ],
-    [
-     6.7,
-     "w5 job 92020581 attempt 1: ok, cost $0.0007"
-    ],
-    [
-     6.73,
-     "w2 job e2585ea4 attempt 1: server_error, retry in 0.2s"
-    ],
-    [
-     6.75,
-     "w5 job a6557f0a attempt 1: ok, cost $0.0011"
-    ],
-    [
-     7.17,
-     "w2 job 35fd231e attempt 1: ok, cost $0.0013"
-    ],
-    [
-     7.19,
-     "w2 job a7c0d2c2 attempt 2: refused, spending cap reached"
-    ],
-    [
-     7.21,
-     "w2 job dc48b034 attempt 2: refused, spending cap reached"
-    ],
-    [
-     7.24,
-     "w2 job 382678e5 attempt 2: replayed (stored reply, not paid again)"
-    ],
-    [
-     7.25,
-     "w1 job 04d1bf36 attempt 1: timeout, retry in 0.0s"
-    ],
-    [
-     7.28,
-     "w2 job 4afddfa8 attempt 2: replayed (stored reply, not paid again)"
-    ],
-    [
-     7.29,
-     "w1 job 540697a2 attempt 2: ok, cost $0.0009"
-    ],
-    [
-     7.36,
-     "w2 job b878e321 attempt 2: replayed (stored reply, not paid again)"
-    ],
-    [
-     7.37,
-     "w5 job d3714c86 attempt 2: ok, cost $0.0011"
-    ],
-    [
-     7.38,
-     "w1 job e2585ea4 attempt 2: ok, cost $0.0011"
-    ],
-    [
-     7.4,
+     7.11,
      "w6 started (provider=fake, dry_run=False, lease=3.0s)"
     ],
     [
-     7.41,
-     "w2 job 04d1bf36 attempt 2: replayed (stored reply, not paid again)"
+     9.25,
+     "w3 job 629cd5b7 attempt 4: lease of w4 expired, job requeued"
     ],
     [
-     7.5,
-     "w5 job f0389287 attempt 1: lease of w3 expired, job requeued"
-    ],
-    [
-     7.53,
-     "w1 job f0389287 attempt 2: replayed (stored reply, not paid again)"
-    ],
-    [
-     9.34,
-     "w5 job 1b11f6a1 attempt 1: lease of w4 expired, job requeued"
-    ],
-    [
-     9.38,
-     "w5 job 1b11f6a1 attempt 2: replayed (stored reply, not paid again)"
-    ],
-    [
-     9.4,
-     "KILL w5 (kill -9) while job 1b11f6a1 attempt 2 is in flight"
-    ],
-    [
-     9.41,
-     "spawn w7"
+     9.27,
+     "w3 job 629cd5b7 attempt 5: replayed (stored reply, not paid again)"
     ]
    ]
   }

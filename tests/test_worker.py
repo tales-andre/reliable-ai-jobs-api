@@ -141,12 +141,12 @@ def test_timeout_then_retry_is_paid_once(conn, settings):
 
 
 def test_retry_after_timeout_needs_no_extra_budget(conn, settings):
-    """The timed-out attempt already holds the job's worst case; with a deduplicating
+    """The timed-out attempt already holds the job's whole estimate; with a deduplicating
     provider the retry reserves nothing more, so a tight cap does not block it."""
     core = FakeProviderCore(seed=1, script={"order-6c": ["timeout"]})
     h = Harness(conn, settings, core)
     jid = h.submit("order-6c")
-    set_cap(conn, h.job(jid)["estimate_micros"])          # room for exactly one worst case
+    set_cap(conn, h.job(jid)["estimate_micros"])          # room for exactly one estimate
     h.drain()
     assert h.job(jid)["status"] == "succeeded"
     assert h.outcomes(jid) == ["timeout", "replayed"]
@@ -256,4 +256,35 @@ def test_stale_worker_result_is_discarded(conn, settings, db_url):
     assert h.job(jid)["status"] == "succeeded"
     assert h.outcomes(jid) == ["worker_lost", "ok"]
     assert core.bill()["charges"] == 1
+    h.assert_money_consistent()
+
+
+def test_crashed_worker_is_not_retried_when_provider_cannot_deduplicate(conn, settings):
+    """Worker killed mid-call, provider without deduplication (like the OpenAI and
+    Anthropic adapters): nobody knows whether the call was charged, so the job fails
+    with a reason instead of being sent again."""
+    core = FakeProviderCore(seed=1)
+    h = Harness(conn, settings, core, dedupes=False)
+    jid = h.submit("order-12")
+    real = h.provider
+
+    class Dying(FakeProvider):
+        dedupes = False
+
+        def generate(self, *a, **kw):
+            real.generate(*a, **kw)                      # the provider does the work and charges...
+            raise DiesMidCall()                          # ...but the worker dies before recording it
+
+    job = claim(conn, "w-dead", settings.lease_s)
+    with pytest.raises(DiesMidCall):
+        process(conn, job, Dying(settings, mock_transport(core, settings.provider_timeout_s)), settings,
+                "w-dead", h.rng)
+    conn.execute("UPDATE jobs SET lease_until = now() - interval '1 second' WHERE id = %s", (jid,))
+    h.drain(worker="w2")
+    job = h.job(jid)
+    assert job["status"] == "failed" and job["error_kind"] == "worker_lost"
+    assert "not retried to avoid paying twice" in job["error"]
+    assert h.outcomes(jid) == ["worker_lost"]
+    assert core.calls == 1                               # never sent a second time
+    assert ledger.job_spent(conn, jid) == job["estimate_micros"] >= core.bill()["total_micros"]
     h.assert_money_consistent()

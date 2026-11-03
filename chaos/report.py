@@ -129,6 +129,7 @@ def write_report(path: Path, params: dict, results: dict) -> None:
     modes = [m for m in ("naive", "safe") if m in results]
     titles = {"naive": "Without safeguards", "safe": "With safeguards"}
     head = "".join(f"<th>{titles[m]}</th>" for m in modes)
+    check_head = "<th>Safeguard lives in</th>" + head
     rows = []
     for i, c in enumerate(results[modes[-1]]["checks"]):
         cells = ""
@@ -136,20 +137,22 @@ def write_report(path: Path, params: dict, results: dict) -> None:
             cm = results[m]["checks"][i]
             ok = None if cm["value"] == "not tracked" else cm["ok"]
             cells += f"<td>{badge(ok)}{escape(str(cm['value']))}</td>"
-        rows.append(f"<tr><td>{escape(c['label'])}</td>{cells}</tr>")
+        rows.append(f"<tr><td>{escape(c['label'])}</td><td>{escape(c.get('where', ''))}</td>{cells}</tr>")
 
     def stat_rows():
         keys = [("requests", "Client requests"), ("posts", "POSTs sent (client retries included)"),
                 ("jobs", "Jobs created"), ("succeeded", "Jobs succeeded"), ("failed", "Jobs failed, by reason"),
                 ("stuck", "Jobs stuck in 'running'"), ("attempts", "Provider attempts"),
                 ("workers_killed", "Workers killed with kill -9"), ("provider_charges", "Charges on the provider bill"),
+                ("dup_charges_from_duplicate_jobs", "Repeat charges because one request became several jobs (API)"),
+                ("dup_charges_from_retries", "Repeat charges from retries inside one job (worker)"),
                 ("provider_billed_micros", "Provider bill"), ("cap_micros", "Spending cap"),
                 ("ledger_spent_micros", "Spent according to our ledger")]
         out = []
         for k, label in keys:
             cells = ""
             for m in modes:
-                v = results[m]["stats"][k]
+                v = results[m]["stats"].get(k, "")
                 if k.endswith("micros"):
                     v = "not tracked" if v is None else fmt_usd(v)
                 elif isinstance(v, dict):
@@ -164,7 +167,7 @@ def write_report(path: Path, params: dict, results: dict) -> None:
         passed = sum(c["ok"] for c in r["checks"])
         cards += (f'<div class="card"><h3>{titles[m]}</h3><div class="big">{passed} of {len(r["checks"])} '
                   f'checks pass</div><div class="note">'
-                  f'{"jobsapi.worker: idempotency key, lease, safe retries, reserved budget" if m == "safe" else "chaos/naive_worker.py: retries everything at once, no lease, no key, no budget"}'
+                  f'{"jobsapi.worker: idempotency key, lease, safe retries, reserved budget" if m == "safe" else "chaos/naive_api.py + naive_worker.py: one job per POST, no cap check; retries everything at once, no lease, no key"}'
                   f'</div></div>')
 
     sections = ""
@@ -178,14 +181,16 @@ def write_report(path: Path, params: dict, results: dict) -> None:
 <style>{CSS}</style></head><body><div class="wrap">
 <h1>Chaos run report</h1>
 <p class="sub">Open-source demo with a fictional support-reply workload and a deliberately unreliable fake provider
-(timeouts, 429 with Retry-After, 500, slow and duplicate replies). Seed <code>{params['seed']}</code>,
+(timeouts, 429 with Retry-After, 500 and slow replies). Seed <code>{params['seed']}</code>,
 {params['jobs']} requests, {params['workers']} workers, up to {params['kills']} killed mid-call, spending cap
 {fmt_usd(params['cap'])} (illustrative prices). Rerun with
 <code>python -m chaos.run --seed {params['seed']}</code>.</p>
 <div class="summary">{cards}</div>
 <h2>Checks</h2>
-<table><tr><th>Check</th>{head}</tr>{''.join(rows)}</table>
-<p class="note">The same seed gives the same requests, repeated POSTs and provider faults. Which worker gets killed,
+<table><tr><th>Check</th>{check_head}</tr>{''.join(rows)}</table>
+<p class="note">Both sides get the same client requests (same headers, same repeated POSTs) and the same fault
+rates. The naive side has no idempotent API and no safeguards in the worker, so each row says which half is
+responsible. Which worker gets killed,
 and when, depends on timing, so counts can move a little between runs. The checks in the
 "With safeguards" column must pass on every run (the script exits non-zero otherwise).</p>
 {sections}

@@ -1,6 +1,7 @@
 """The "before" picture: a worker written the way many first versions are.
 
-Used only by the chaos run, to compare against jobsapi.worker on the same faults.
+Used only by the chaos run, with chaos/naive_api.py, to compare against
+jobsapi.api + jobsapi.worker at the same fault rates.
 It deliberately has none of the safeguards:
   * no lease: if it dies mid-job, the job stays "running" forever;
   * retries every error at once, up to 5 times, including errors that will never succeed;
@@ -20,10 +21,12 @@ from jobsapi.retry import ProviderError
 
 
 class NaiveProvider(FakeProvider):
-    def generate(self, prompt, max_tokens, idempotency_key, request_ref=""):
+    def generate(self, prompt, max_tokens, idempotency_key, request_ref="", job_ref=""):
+        # No Idempotency-Key. X-Request-Ref and X-Job-Ref are labels for the chaos
+        # report's bill only; the fake provider does not deduplicate on them.
         resp = self._post(f"{self.settings.fake_provider_url}/v1/generate",
                           {"prompt": prompt, "max_tokens": max_tokens},
-                          {"X-Request-Ref": request_ref})          # no Idempotency-Key
+                          {"X-Request-Ref": request_ref, "X-Job-Ref": job_ref})
         b = resp.json()
         return Generation(b["text"], b["usage"]["input_tokens"], b["usage"]["output_tokens"],
                           b["usage"]["cost_micros"])
@@ -53,7 +56,7 @@ def main(argv=None) -> int:
             conn.execute("INSERT INTO attempts (job_id, attempt, worker_id) VALUES (%s, %s, %s)",
                          (job["id"], attempt, w))
             try:
-                gen = provider.generate(job["prompt"], job["max_tokens"], "", ref)
+                gen = provider.generate(job["prompt"], job["max_tokens"], "", ref, job["idempotency_key"])
             except ProviderError as e:
                 last = e.message
                 conn.execute("UPDATE attempts SET finished_at = clock_timestamp(), outcome = %s "

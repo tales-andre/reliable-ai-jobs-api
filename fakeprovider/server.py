@@ -2,7 +2,7 @@
 
     python -m fakeprovider --port 8090 --seed 42 --chaos
 
-POST /v1/generate   {"prompt": "...", "max_tokens": 200}   headers: Idempotency-Key, X-Request-Ref
+POST /v1/generate   {"prompt": "...", "max_tokens": 200}   headers: Idempotency-Key, X-Request-Ref, X-Job-Ref
 GET  /_bill         what the provider charged (used by the chaos report)
 """
 from __future__ import annotations
@@ -22,10 +22,11 @@ def create_app(core: FakeProviderCore) -> FastAPI:
     @app.post("/v1/generate")
     async def generate(request: Request,
                        idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
-                       request_ref: str = Header(default="", alias="X-Request-Ref")):
+                       request_ref: str = Header(default="", alias="X-Request-Ref"),
+                       job_ref: str = Header(default="", alias="X-Job-Ref")):
         body = await request.json()
         action = core.handle(idempotency_key, str(body.get("prompt", "")), int(body.get("max_tokens", 100)),
-                             request_ref)
+                             request_ref, job_ref)
         if action.delay_s:
             # The work is done and charged already; the reply is just late.
             await asyncio.sleep(action.delay_s)

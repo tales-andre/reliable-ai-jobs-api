@@ -2,7 +2,7 @@
 
 AI generation jobs that retry safely, survive crashed workers and check a spending cap before every call.
 
-**A common request in AI job posts:** an AI feature (text, clips, summaries) runs as background jobs
+**The problem:** an AI feature (text, clips, summaries) runs as background jobs
 against a model provider that sometimes times out, rate-limits or fails. Jobs get stuck, users click
 "retry" and get two results, and the team is not sure whether the provider billed them twice. They
 want it fixed so it runs in parallel, retries on its own, and never pays twice for the same work.
